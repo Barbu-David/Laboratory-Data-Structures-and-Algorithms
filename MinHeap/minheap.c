@@ -93,11 +93,8 @@ int minheap_extract(struct minheap* heap)
 		}
 		else if((heap->values[index]<=heap->values[index_right] && heap->values[index]<=heap->values[index_left]))
 			smallest=index;
-		else if(index_right<=(int)heap->size) {
-			if(heap->values[index_right]<=heap->values[index_left])
-				smallest=index_right;
-		}
-
+		else if(heap->values[index_right]<=heap->values[index_left])
+			smallest=index_right;
 		else smallest=index_left;
 
 	}
@@ -143,5 +140,16 @@ void minheap_delete(struct minheap* heap, int value)
 			free(heap2);
 			return;
 		}
+}
+
+void heapsort(int* arr, int size)
+{
+	struct minheap* heap=minheap_heapify(arr,size);
+	int i=0;
+	while(heap->size){
+		arr[i]=minheap_extract(heap);
+		i++;
+	}
+	minheap_free(heap);
 }
 

@@ -15,5 +15,6 @@ int minheap_findmin(struct minheap* heap);
 struct minheap* minheap_heapify(int* future_heap, int size);
 void minheap_delete(struct minheap* heap, int value);
 void minheap_free(struct minheap* heap);
+void heapsort(int* arr, int size);
 
 #endif

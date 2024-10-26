@@ -9,10 +9,21 @@ int main()
 	minheap_insert(heap,9);
 	minheap_insert(heap,3);
 	minheap_insert(heap,12);
-	minheap_insert(heap,1);
+	minheap_insert(heap,55);
 	minheap_insert(heap,5);
+	minheap_insert(heap,11);
+	minheap_insert(heap,13);
+	minheap_insert(heap,19);
+	minheap_insert(heap,81);
+	minheap_insert(heap,33);
+	minheap_insert(heap,44);
+	minheap_insert(heap,36);
+	minheap_insert(heap,665);
+	minheap_insert(heap,212);
+	minheap_insert(heap,70);
+	minheap_insert(heap,8);
 	minheap_insert(heap,2);
-
+	
 	minheap_print(heap);
 
 	printf("minheap: %d \n",minheap_extract(heap));
@@ -32,6 +43,9 @@ int main()
 	minheap_print(heap2);
 	
 	minheap_delete(heap, 12);
+	minheap_print(heap);
+
+	heapsort(heap->values,heap->size);
 	minheap_print(heap);
 
 	minheap_free(heap);
