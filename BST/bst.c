@@ -39,16 +39,16 @@ void bst_preorder_print(struct bst_node* root)
 {
 	if(root==NULL) return;
 	printf("%d ",root->value);
-	bst_inorder_print(root->left);
-	bst_inorder_print(root->right);
+	bst_preorder_print(root->left);
+	bst_preorder_print(root->right);
 
 }
 
 void bst_postorder_print(struct bst_node* root)
 {
 	if(root==NULL) return;
-	bst_inorder_print(root->left);
-	bst_inorder_print(root->right);
+	bst_postorder_print(root->left);
+	bst_postorder_print(root->right);
 	printf("%d ",root->value);
 }
 
@@ -83,7 +83,7 @@ int bst_max(struct bst_node* root)
 }
 
 
-struct bst_node* bst_shearch_parent(struct bst_node* root, int value)
+struct bst_node* bst_search_parent(struct bst_node* root, int value)
 {
 	while(root!=NULL) {
 		if(root->left!=NULL){
@@ -101,7 +101,7 @@ struct bst_node* bst_shearch_parent(struct bst_node* root, int value)
 	return root;
 }
 
-struct bst_node* bst_shearch(struct bst_node* root, int value)
+struct bst_node* bst_search(struct bst_node* root, int value)
 {
 	while(root!=NULL) {
 		if(root->value==value) return root;
@@ -116,8 +116,8 @@ struct bst_node* bst_shearch(struct bst_node* root, int value)
 void bst_pop(struct bst_node** big_root, int value) {
 
 	struct bst_node* root = *big_root;
-	struct bst_node* parent = bst_shearch_parent(root, value);
-	root = bst_shearch(root, value);
+	struct bst_node* parent = bst_search_parent(root, value);
+	root = bst_search(root, value);
 
 	if (root == NULL) return; 
 
@@ -172,9 +172,11 @@ void bst_pop(struct bst_node** big_root, int value) {
 	free(successor);
 }
 
-	void bst_free(struct bst_node** root)
+void bst_free(struct bst_node** root)
 {
-	while(bst_size((*root)))
-		bst_pop(root,(*root)->value);
-
+	if((*root)==NULL) return;
+	bst_free(&(*root)->left);
+	bst_free(&(*root)->right);
+	free((*root));
+	(*root)=NULL;
 }
