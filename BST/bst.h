@@ -7,18 +7,19 @@ struct bst_node {
         int value;
 };
 
-struct bst_node* bst_init(int value);
+struct bst_node* bst_init(int value); 
 void bst_push(struct bst_node* root, int value);
-void bst_pop(struct bst_node* root, int value);
+void bst_pop(struct bst_node** root, int value);
 void bst_preorder_print(struct bst_node* root);
 void bst_inorder_print(struct bst_node* root);
 void bst_postorder_print(struct bst_node* root);
-int bst_size(struct bst_node* root);
-int bst_size(struct bst_node* root);
-int bst_levels(struct bst_node* root);
-int bst_min(struct bst_node* root);
-int bst_max(struct bst_node* root);
-int bst_shearch(struct bst_node* root);
-void bst_free(struct bst_node* root);
+int bst_size(struct bst_node* root); 
+int bst_levels(struct bst_node* root); 
+int bst_min(struct bst_node* root); 
+int bst_max(struct bst_node* root); 
+struct bst_node* bst_shearch(struct bst_node* root, int value); 
+struct bst_node* bst_shearch(struct bst_node* root, int value); 
+struct bst_node* bst_succesor_parent(struct bst_node* root); 
+void bst_free(struct bst_node* root); //
 
 #endif

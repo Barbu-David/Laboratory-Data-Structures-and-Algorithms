@@ -2,7 +2,7 @@
 #include"minheap.h"
 #include"stdlib.h"
 
-int main()
+int main(void)
 {
 	struct minheap* heap=minheap_init();
 	minheap_insert(heap,10);
