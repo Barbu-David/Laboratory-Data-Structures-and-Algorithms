@@ -16,6 +16,9 @@ void bst_postorder_print(struct bst_node* root);
 int bst_size(struct bst_node* root);
 int bst_size(struct bst_node* root);
 int bst_levels(struct bst_node* root);
+int bst_min(struct bst_node* root);
+int bst_max(struct bst_node* root);
+int bst_shearch(struct bst_node* root);
 void bst_free(struct bst_node* root);
 
 #endif
