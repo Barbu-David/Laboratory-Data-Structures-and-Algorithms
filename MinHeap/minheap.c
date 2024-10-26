@@ -34,9 +34,9 @@ void minheap_insert(struct minheap* heap, int value)
 	int index=heap->size-1;
 	heap->values[index]=value;
 
-	while(index>0 && heap->values[index/2] > heap->values[index]) {
-		switch_values(&heap->values[index/2],&heap->values[index]);
-		index/=2;
+	while(index>0 && heap->values[(index-1)/2] > heap->values[index]) {
+		switch_values(&heap->values[(index-1)/2],&heap->values[index]);
+		index=(index-1)/2;
 	}	
 }
 
@@ -61,7 +61,7 @@ int minheap_extract(struct minheap* heap)
 	heap->size--;
 
 	if(heap->size==1) return r;
-	else if(heap->size==2) {
+	else if(heap->size==2 && heap->values[1]<heap->values[0]) {
 		switch_values(&heap->values[0],&heap->values[1]);
 		return r;
 	}
