@@ -18,8 +18,7 @@ int bst_levels(struct bst_node* root);
 int bst_min(struct bst_node* root); 
 int bst_max(struct bst_node* root); 
 struct bst_node* bst_shearch(struct bst_node* root, int value); 
-struct bst_node* bst_shearch(struct bst_node* root, int value); 
-struct bst_node* bst_succesor_parent(struct bst_node* root); 
-void bst_free(struct bst_node* root); //
+struct bst_node* bst_shearch_parent(struct bst_node* root, int value); 
+void bst_free(struct bst_node** root); 
 
 #endif

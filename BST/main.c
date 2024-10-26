@@ -11,7 +11,7 @@ int main(void)
 	bst_push(bst, 1);
 	bst_push(bst, 11);
 	bst_push(bst, 2);
-/*
+
 	bst_inorder_print(bst);
 	printf("\n");
 	bst_preorder_print(bst);
@@ -22,21 +22,22 @@ int main(void)
 	printf("\n levels %d",bst_levels(bst));
 	printf("\n min %d",bst_min(bst));
 	printf("\n max %d",bst_max(bst));
-*/
-	bst_pop(bst,10);
+
+	bst_pop(&bst,10);
 
 	printf("\n size %d\n",bst_size(bst));
 
 	bst_inorder_print(bst);
 
-	bst_pop(bst,2);
-//	printf("\n size %d\n",bst_size(bst));
-	bst_inorder_print(bst);
-/*
-	bst_pop(bst,25);
+	bst_pop(&bst,2);
 	printf("\n size %d\n",bst_size(bst));
 	bst_inorder_print(bst);
 
-*/
+	bst_pop(&bst,25);
+	printf("\n size %d\n",bst_size(bst));
+	bst_inorder_print(bst);
+
+	bst_free(&bst);
+
 	return 0;
 }

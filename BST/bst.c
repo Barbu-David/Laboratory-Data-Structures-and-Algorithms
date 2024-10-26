@@ -82,16 +82,6 @@ int bst_max(struct bst_node* root)
 	return root->value;
 }
 
-struct bst_node* bst_shearch(struct bst_node* root, int value)
-{
-	while(root!=NULL) {
-		if(root->value==value) return root;
-		if(value<root->value) root=root->left;
-		else root=root->right;
-	}
-
-	return root;
-}
 
 struct bst_node* bst_shearch_parent(struct bst_node* root, int value)
 {
@@ -111,78 +101,80 @@ struct bst_node* bst_shearch_parent(struct bst_node* root, int value)
 	return root;
 }
 
-struct bst_node* bst_succesor_parent(struct bst_node* root)
-{			
-	if(root==NULL || root->right==NULL) return root;
-	if(root->right->left==NULL) return root->right;
-
-	root=root->right;
-	while(root->left->left!=NULL) root=root->left;
+struct bst_node* bst_shearch(struct bst_node* root, int value)
+{
+	while(root!=NULL) {
+		if(root->value==value) return root;
+		if(value<root->value) root=root->left;
+		else root=root->right;
+	}
 
 	return root;
 }
 
 
-void bst_pop(struct bst_node** big_root, int value)
-{	
-	struct bst_node* parent=bst_shearch_parent(root,value);
-	struct bst_node* root=(bst_shearch((*big_root), value));
-	struct bst_node* tmp;
+void bst_pop(struct bst_node** big_root, int value) {
 
-	if(root==NULL) return;
+	struct bst_node* root = *big_root;
+	struct bst_node* parent = bst_shearch_parent(root, value);
+	root = bst_shearch(root, value);
 
-	if(root->left==NULL && root->right==NULL){
-		if(parent!=NULL){
-			if(root==parent->left) parent->left=NULL;
-			else if(parent->right==root)parent->right=NULL;
+	if (root == NULL) return; 
+
+	if (root->left == NULL && root->right == NULL) {
+		if (parent != NULL) {
+			if (root == parent->left) parent->left = NULL;
+			else if (root == parent->right) parent->right = NULL;
+		} else {
+			*big_root = NULL;
 		}
 		free(root);
-
 		return;
 	}
 
-	if(root->right==NULL){
-		if(parent!=NULL){
-			if(parent->right==root)
-				parent->right=root->left;
-			else
-				parent->left=root->left;
-			free(root);
+	if (root->right == NULL) {
+		if (parent != NULL) {
+			if (parent->right == root) parent->right = root->left;
+			else parent->left = root->left;
+		} else {
+			*big_root = root->left;
 		}
-		else {	
-			tmp=root->left;
-			root->value=tmp->value;
-			root->right=tmp->left;
-			root->left=tmp->right;
-			free(tmp);
-		}
-
+		free(root);
 		return;
 	}
 
-	if(root->left==NULL){	
-		if(parent!=NULL){
-			if(parent->right==root)
-				parent->right=root->right;
-			else
-				parent->left=root->right;
-			free(root);
+	if (root->left == NULL) {
+		if (parent != NULL) {
+			if (parent->right == root) parent->right = root->right;
+			else parent->left = root->right;
+		} else {
+			*big_root = root->right;
 		}
-		else { 
-			tmp=root->right;
-			root->value=tmp->value;
-			root->left=tmp->left;
-			root->right=tmp->right;
-			free(tmp);
-		}
-
+		free(root);
 		return;
 	}
 
-	tmp=bst_succesor_parent(root);
-	root->value=tmp->value;
-	bst_pop(tmp,tmp->value);
+	struct bst_node* successor_parent = root;
+	struct bst_node* successor = root->right;
+	while (successor->left != NULL) {
+		successor_parent = successor;
+		successor = successor->left;
+	}
 
-	return;
+	root->value = successor->value;
+
+	if (successor_parent->left == successor) {
+		successor_parent->left = successor->right;
+	} else {
+		successor_parent->right = successor->right;
+	}
+
+	free(successor);
+}
+
+	void bst_free(struct bst_node** root)
+{
+	while(bst_size((*root)))
+		bst_pop(root,(*root)->value);
 
 }
