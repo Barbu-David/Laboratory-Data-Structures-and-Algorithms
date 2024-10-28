@@ -123,7 +123,7 @@ struct bst_node* bst_search_parent(struct bst_node* root, void* value, bool (*ch
 		if(root->right!=NULL)
 			if(check_equality(value, root->right->value)) return root;
 
-		if(compare(value, root->value)==root->value) root=root->left;
+		if(compare(value, root->value)==value) root=root->left;
 		else root=root->right;
 	}
 
@@ -201,7 +201,7 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 	struct bst_node* parent = bst_search_parent(target, value, check_equality, compare);
 
 		
-	if(parent!=NULL) target = bst_search_child_with_value(target, value, check_equality);
+	if(parent!=NULL) target = bst_search_child_with_value(target, value, check_equality);	
 
 	if (target == NULL) return; 
 
@@ -241,7 +241,6 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 		free(target);
 		return;
 	}
-
 	struct bst_node* successor_parent = bst_successor_parent(target);
 	struct bst_node* successor = (successor_parent->left==NULL)? successor_parent:successor_parent->left;
 	

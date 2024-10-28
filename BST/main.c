@@ -16,7 +16,6 @@ bool check_equality_for_ints(void* a, void* b)
 	return *(int*)a == *(int*)b;
 }
 
-
 void* compare_for_pers(void* a, void* b) {
 	return ((*(struct person*)a).age >= (*(struct person*)b).age) ? a : b;
 }
@@ -37,32 +36,20 @@ void print_for_pers(void* a)
 
 int main(void)
 {	
-	int a=10;
+	int a=24;
 
 	struct bst_node* bst = bst_init(&a, sizeof(int));
 	bst_inorder_print(bst, print_for_ints);
 	printf("\n");	
 
-	a=2;
+	a=23;
 	bst_push(bst, &a, sizeof(int), compare_for_ints);
 
 
 	a=25;
 	bst_push(bst, &a, sizeof(int), compare_for_ints);
 
-	a=14;
-	bst_push(bst, &a, sizeof(int), compare_for_ints);
-
-	a=55;
-	bst_push(bst, &a, sizeof(int), compare_for_ints);
-
-	a=1;
-	bst_push(bst, &a, sizeof(int), compare_for_ints);
-
-	a=11;
-	bst_push(bst, &a, sizeof(int), compare_for_ints);
-
-	a=2;
+	a=27;
 	bst_push(bst, &a, sizeof(int), compare_for_ints);
 
 	bst_inorder_print(bst, print_for_ints);
@@ -76,17 +63,7 @@ int main(void)
 	printf("\n min %d",*(int*)bst_min(bst));
 	printf("\n max %d",*(int*)bst_max(bst));
 
-	int b=10;
-	bst_pop(&bst, &b, check_equality_for_ints, compare_for_ints);
-	printf("\n size %d\n",bst_size(bst));
-	bst_inorder_print(bst, print_for_ints);
-
-	b=2;
-	bst_pop(&bst,&b, check_equality_for_ints, compare_for_ints);
-	printf("\n size %d\n",bst_size(bst));
-	bst_inorder_print(bst, print_for_ints);
-
-	b=25;
+	int b=27;
 	bst_pop(&bst, &b, check_equality_for_ints, compare_for_ints);
 	printf("\n size %d\n",bst_size(bst));
 	bst_inorder_print(bst, print_for_ints);
