@@ -7,6 +7,10 @@
 struct bst_node* bst_init(int value)
 {
 	struct bst_node* node=malloc(sizeof(struct bst_node));
+	
+	if(node==NULL)
+		fprintf(stderr,"Memory allocation failed\n");
+		
 	node->value=value;
 	node->left=NULL;
 	node->right=NULL;
@@ -14,7 +18,10 @@ struct bst_node* bst_init(int value)
 }
 
 void bst_push(struct bst_node* root, int value)
-{
+{	
+	if(root==NULL) 
+		fprintf(stderr,"Pushed to uninitialized tree\n");
+
 	if(value<root->value){
 		if(root->left!=NULL)
 			bst_push(root->left, value);
@@ -29,7 +36,9 @@ void bst_push(struct bst_node* root, int value)
 
 void bst_inorder_print(struct bst_node* root)
 {
-	if(root==NULL) return;
+	if(root==NULL)
+		return;
+
 	bst_inorder_print(root->left);
 	printf("%d ",root->value);
 	bst_inorder_print(root->right);
@@ -38,7 +47,9 @@ void bst_inorder_print(struct bst_node* root)
 
 void bst_preorder_print(struct bst_node* root)
 {
-	if(root==NULL) return;
+	if(root==NULL)
+		return;
+
 	printf("%d ",root->value);
 	bst_preorder_print(root->left);
 	bst_preorder_print(root->right);
@@ -47,7 +58,9 @@ void bst_preorder_print(struct bst_node* root)
 
 void bst_postorder_print(struct bst_node* root)
 {
-	if(root==NULL) return;
+	if(root==NULL)
+		return;
+
 	bst_postorder_print(root->left);
 	bst_postorder_print(root->right);
 	printf("%d ",root->value);
@@ -61,10 +74,12 @@ int bst_size(struct bst_node* root)
 
 int bst_levels(struct bst_node* root)
 {
-	if(root==NULL) return INT_MIN;
+	if(root==NULL) return 0;
+
 	int levels_left=1, levels_right=1;
 	levels_left+=bst_levels(root->left);
 	levels_right+=bst_levels(root->right);
+
 	return (levels_right>levels_left)? levels_right:levels_left;
 
 }
@@ -78,7 +93,7 @@ int bst_min(struct bst_node* root)
 
 int bst_max(struct bst_node* root)
 {
-	if(root==NULL) return 0;
+	if(root==NULL) return INT_MIN;
 	while(root->right!=NULL) root=root->right;
 	return root->value;
 }
@@ -113,8 +128,6 @@ struct bst_node* bst_search_child_value(struct bst_node* root, int value)
 			return root->right;
 
 	return root->left;
-	
-
 }
 
 struct bst_node* bst_search(struct bst_node* root, int value)
