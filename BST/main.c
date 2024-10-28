@@ -16,12 +16,14 @@ bool check_equality_for_ints(void* a, void* b)
 	return *(int*)a == *(int*)b;
 }
 
-void* compare_for_pers(void* a, void* b) {
+void* compare_for_pers(void* a, void* b) 
+{
 	return ((*(struct person*)a).age >= (*(struct person*)b).age) ? a : b;
 }
 
-bool check_equality_for_pers(void* a, void* b) {
-	return ((*(struct person*)a).age == (*(struct person*)b).age)? true:false; 
+bool check_equality_for_pers(void* a, void* b) 
+{
+	return ((*(struct person*)a).age == (*(struct person*)b).age); 
 }
 
 void print_for_ints(void* a)
