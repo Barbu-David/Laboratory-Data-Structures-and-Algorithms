@@ -19,8 +19,8 @@ struct bst_node* bst_init(int value)
 void bst_push(struct bst_node* root, int value)
 {	
 	if(root==NULL) { 
-	fprintf(stderr,"Pushed to uninitialized tree\n");
-	return;	
+		fprintf(stderr,"Pushed to uninitialized tree\n");
+		return;	
 	}
 
 	if(value<root->value){
@@ -108,11 +108,9 @@ struct bst_node* bst_search_parent(struct bst_node* root, int value)
 	while(root!=NULL) {
 		if(root->left!=NULL)
 			if(root->left->value==value) return root;
-		
 
 		if(root->right!=NULL)
 			if(root->right->value==value) return root;
-		
 
 		if(value<root->value) root=root->left;
 		else root=root->right;
