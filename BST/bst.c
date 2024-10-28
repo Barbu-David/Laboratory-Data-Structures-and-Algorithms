@@ -30,6 +30,7 @@ void bst_push(struct bst_node* root, void* value, size_t size, void* (*compare)(
 		fprintf(stderr,"Pushed to uninitialized tree\n");
 		return;	
 	}
+
 	assert(value!=NULL);
 
 	if(compare(value,root->value)==root->value){
@@ -171,6 +172,7 @@ struct bst_node* bst_predecessor_parent(struct bst_node* root)
 struct bst_node* bst_search(struct bst_node* root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
 {
 	assert(value!=NULL);
+
 	if(check_equality(root, root->value)) return root;
 	return bst_search_child_with_value(bst_search_parent(root,value,check_equality,compare), value, check_equality);
 }
