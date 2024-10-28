@@ -6,7 +6,9 @@
 #include<stdbool.h>
 	
 struct bst_node* bst_init(void* value, size_t size)
-{
+{	
+	assert(value!=NULL);
+
 	struct bst_node* node=malloc(sizeof(struct bst_node));
 	assert(node!=NULL);	
 
@@ -28,6 +30,7 @@ void bst_push(struct bst_node* root, void* value, size_t size, void* (*compare)(
 		fprintf(stderr,"Pushed to uninitialized tree\n");
 		return;	
 	}
+	assert(value!=NULL);
 
 	if(compare(value,root->value)==root->value){
 		if(root->left!=NULL)
@@ -110,6 +113,7 @@ void* bst_max(struct bst_node* root)
 
 struct bst_node* bst_search_parent(struct bst_node* root, void* value, bool (*check_equality)(void* a, void* b), void* (*compare)(void*, void*))
 {
+	assert(value!=NULL);
 
 	while(root!=NULL) {
 		if(root->left!=NULL)
@@ -127,6 +131,8 @@ struct bst_node* bst_search_parent(struct bst_node* root, void* value, bool (*ch
 
 struct bst_node* bst_search_child_with_value(struct bst_node* root, void* value, bool (*check_equality)(void*, void*))
 {
+	assert(value!=NULL);
+
 	if(root==NULL) return root;
 
 	if(root->right!=NULL)
@@ -164,6 +170,7 @@ struct bst_node* bst_predecessor_parent(struct bst_node* root)
 
 struct bst_node* bst_search(struct bst_node* root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
 {
+	assert(value!=NULL);
 	if(check_equality(root, root->value)) return root;
 	return bst_search_child_with_value(bst_search_parent(root,value,check_equality,compare), value, check_equality);
 }
@@ -185,7 +192,8 @@ struct bst_node* bst_predecessor(struct bst_node* root)
 
 void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))  {
 
-	printf("popping %d ",*(int*)(value));
+        assert(value!=NULL);
+
 	struct bst_node* target = *root;
 
 	struct bst_node* parent = bst_search_parent(target, value, check_equality, compare);
@@ -195,10 +203,7 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 
 	if (target == NULL) return; 
 
-	printf(" target %d",*(int*)(target->value));
-
 	if (target->left == NULL && target->right == NULL) {
-		printf(" case 1");
 		if (parent != NULL) {
 			if (target == parent->left) parent->left = NULL;
 			else if (target == parent->right) parent->right = NULL;
@@ -212,7 +217,6 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 	}
 
 	if (target->right == NULL) {
-		printf(" case 2");
 		if (parent != NULL) {
 			if (parent->right == target) parent->right = target->left;
 			else parent->left = target->left;
@@ -225,7 +229,6 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 	}
 
 	if (target->left == NULL) {
-		printf(" case 3");
 		if (parent != NULL) {
 			if (parent->right == target) parent->right = target->right;
 			else parent->left = target->right;
@@ -237,8 +240,6 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 		return;
 	}
 
-
-	printf(" root case");
 	struct bst_node* successor_parent = bst_successor_parent(target);
 	struct bst_node* successor = (successor_parent->left==NULL)? successor_parent:successor_parent->left;
 	
