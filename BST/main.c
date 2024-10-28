@@ -30,6 +30,7 @@ int main(void)
 	bst_inorder_print(bst);
 
 	bst_pop(&bst,2);
+
 	printf("\n size %d\n",bst_size(bst));
 	bst_inorder_print(bst);
 
