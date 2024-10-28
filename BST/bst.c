@@ -85,6 +85,7 @@ int bst_max(struct bst_node* root)
 
 struct bst_node* bst_search_parent(struct bst_node* root, int value)
 {
+
 	while(root!=NULL) {
 		if(root->left!=NULL){
 			if(root->left->value==value) return root;
@@ -99,6 +100,20 @@ struct bst_node* bst_search_parent(struct bst_node* root, int value)
 	}
 
 	return root;
+}
+
+struct bst_node* bst_search_child_value(struct bst_node* root, int value)
+{
+	if(root==NULL) 
+		return root;
+
+	if(root->right!=NULL)
+		if(root->right->value==value)
+			return root->right;
+
+	return root->left;
+	
+
 }
 
 struct bst_node* bst_search(struct bst_node* root, int value)
@@ -117,7 +132,9 @@ void bst_pop(struct bst_node** big_root, int value) {
 
 	struct bst_node* root = *big_root;
 	struct bst_node* parent = bst_search_parent(root, value);
-	root = bst_search(root, value);
+	
+	if(parent!=NULL)
+		root = bst_search_child_value(root, value);
 
 	if (root == NULL) return; 
 
