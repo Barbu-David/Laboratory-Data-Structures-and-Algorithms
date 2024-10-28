@@ -7,9 +7,8 @@
 struct bst_node* bst_init(int value)
 {
 	struct bst_node* node=malloc(sizeof(struct bst_node));
-	
-	if(node==NULL)	fprintf(stderr,"Memory allocation failed\n");
-		
+	assert(node!=NULL);	
+
 	node->value=value;
 	node->left=NULL;
 	node->right=NULL;
@@ -19,7 +18,10 @@ struct bst_node* bst_init(int value)
 
 void bst_push(struct bst_node* root, int value)
 {	
-	if(root==NULL) fprintf(stderr,"Pushed to uninitialized tree\n");
+	if(root==NULL) { 
+	fprintf(stderr,"Pushed to uninitialized tree\n");
+	return;	
+	}
 
 	if(value<root->value){
 		if(root->left!=NULL)
