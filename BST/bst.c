@@ -2,7 +2,8 @@
 #include"stdio.h"
 #include"stdlib.h"
 #include<assert.h>
-
+#include <limits.h>
+	
 struct bst_node* bst_init(int value)
 {
 	struct bst_node* node=malloc(sizeof(struct bst_node));
@@ -60,7 +61,7 @@ int bst_size(struct bst_node* root)
 
 int bst_levels(struct bst_node* root)
 {
-	if(root==NULL) return 0;
+	if(root==NULL) return INT_MIN;
 	int levels_left=1, levels_right=1;
 	levels_left+=bst_levels(root->left);
 	levels_right+=bst_levels(root->right);
@@ -70,7 +71,7 @@ int bst_levels(struct bst_node* root)
 
 int bst_min(struct bst_node* root)
 {	
-	if(root==NULL) return 0;
+	if(root==NULL) return INT_MIN;
 	while(root->left!=NULL) root=root->left;
 	return root->value;
 }
@@ -118,13 +119,8 @@ struct bst_node* bst_search_child_value(struct bst_node* root, int value)
 
 struct bst_node* bst_search(struct bst_node* root, int value)
 {
-	while(root!=NULL) {
-		if(root->value==value) return root;
-		if(value<root->value) root=root->left;
-		else root=root->right;
-	}
-
-	return root;
+	if(root->value==value) return root;
+	return bst_search_child_value(bst_search_parent(root,value),value);
 }
 
 
