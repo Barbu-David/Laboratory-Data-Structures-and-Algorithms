@@ -1,42 +1,77 @@
 #include<stdio.h>
 #include"bst.h"
 
-int main(void)
+void* compare_for_ints(void* a, void* b)
 {
-	struct bst_node* bst = bst_init(10);
-	bst_push(bst, 2);
-	bst_push(bst, 25);
-	bst_push(bst, 14);
-	bst_push(bst, 55);
-	bst_push(bst, 1);
-	bst_push(bst, 11);
-	bst_push(bst, 2);
+	return *(int*)a >= *(int*)b? a:b;
+}
 
-	bst_inorder_print(bst);
+bool check_equality(void* a, void* b)
+{
+	return *(int*)a == *(int*)b? true:false;
+}
+
+
+void print_for_ints(void* a)
+{
+	printf("%d ", *(int*)a);
+}
+
+int main(void)
+{	
+	int a=10;
+
+	struct bst_node* bst = bst_init(&a, sizeof(int));
+	bst_inorder_print(bst, print_for_ints);
+	printf("\n");	
+
+	a=2;
+	bst_push(bst, &a, sizeof(int), compare_for_ints);
+
+
+	a=25;
+	bst_push(bst, &a, sizeof(int), compare_for_ints);
+	
+	a=14;
+	bst_push(bst, &a, sizeof(int), compare_for_ints);
+
+	a=55;
+	bst_push(bst, &a, sizeof(int), compare_for_ints);
+
+	a=1;
+	bst_push(bst, &a, sizeof(int), compare_for_ints);
+
+	a=11;
+	bst_push(bst, &a, sizeof(int), compare_for_ints);
+
+	a=2;
+	bst_push(bst, &a, sizeof(int), compare_for_ints);
+
+	bst_inorder_print(bst, print_for_ints);
 	printf("\n");
-	bst_preorder_print(bst);
+	bst_preorder_print(bst, print_for_ints);
 	printf("\n");
-	bst_postorder_print(bst);
+	bst_postorder_print(bst, print_for_ints);
 
 	printf("\n size %d",bst_size(bst));
 	printf("\n levels %d",bst_levels(bst));
-	printf("\n min %d",bst_min(bst));
-	printf("\n max %d",bst_max(bst));
+	printf("\n min %d",*(int*)bst_min(bst));
+	printf("\n max %d",*(int*)bst_max(bst));
 
-	bst_pop(&bst,10);
-
+	int b=10;
+	bst_pop(&bst, &b, check_equality, compare_for_ints);
 	printf("\n size %d\n",bst_size(bst));
-
-	bst_inorder_print(bst);
-
-	bst_pop(&bst,2);
-
+	bst_inorder_print(bst, print_for_ints);
+	
+	b=2;
+	bst_pop(&bst,&b, check_equality, compare_for_ints);
 	printf("\n size %d\n",bst_size(bst));
-	bst_inorder_print(bst);
+	bst_inorder_print(bst, print_for_ints);
 
-	bst_pop(&bst,25);
+	b=25;
+	bst_pop(&bst, &b, check_equality, compare_for_ints);
 	printf("\n size %d\n",bst_size(bst));
-	bst_inorder_print(bst);
+	bst_inorder_print(bst, print_for_ints);
 
 	bst_free(&bst);
 
