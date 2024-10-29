@@ -1,20 +1,31 @@
 #ifndef MINHEAP_H
 #define MINHEAP_H
 
+#include<stddef.h>
+#include<stdbool.h>
+
 struct minheap {
-		int* values;
-		long unsigned size, capacity;
+		void** values;
+		long unsigned occupied_capacity, capacity;
 };		
 
-void switch_values(int* a, int* b);
+
 struct minheap* minheap_init();
-void minheap_insert(struct minheap* heap, int value);
-void minheap_print(struct minheap* heap);
-int minheap_extract(struct minheap* heap);
-int minheap_findmin(struct minheap* heap);
-struct minheap* minheap_heapify(int* future_heap, int size);
-void minheap_delete(struct minheap* heap, int value);
+
+void minheap_insert(struct minheap* heap, void* value, size_t size, void* (*compare)(void*, void*));
+
+void minheap_print(struct minheap* heap, void (*print)(void*));
+
+void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*));
+void minheap_delete(struct minheap* heap, void* value, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*));
+
+void* minheap_findmin(struct minheap* heap);
+
+struct minheap* minheap_heapify(void** future_heap, unsigned long number_of_elements, size_t size, void* (*compare)(void*, void*));
+void heapsort(void** arr, unsigned long number_of_elements, size_t size, void* (*compare)(void*, void*));
+
 void minheap_free(struct minheap* heap);
-void heapsort(int* arr, int size);
+
+void switch_values(void** a, void** b);
 
 #endif

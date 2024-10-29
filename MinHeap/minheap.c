@@ -2,10 +2,11 @@
 #include<assert.h>
 #include<stdlib.h>
 #include<stdio.h>
+#include<string.h>
 
-void switch_values(int* a, int* b)
+void switch_values(void** a, void** b)
 {
-	int tmp=*a;
+	void* tmp=*a;
 	*a=*b;
 	*b=tmp;
 
@@ -16,69 +17,70 @@ struct minheap* minheap_init()
 	struct minheap* heap = malloc(sizeof(struct minheap));
 	assert(heap!=NULL);
 
-	heap->size=0;
+	heap->occupied_capacity=0;
 	heap->capacity=4;	
 
-	heap->values = malloc(sizeof(int)*heap->capacity);
+	heap->values = malloc(sizeof(void*)*heap->capacity);
 	assert(heap->values!=NULL);
 
 	return heap;
 }
 
-void minheap_insert(struct minheap* heap, int value)
+void minheap_insert(struct minheap* heap, void* value, size_t size, void* (*compare)(void*, void*))
 {
 	assert(heap!=NULL);
-	heap->size++;
+	assert(value!=NULL);
 
-	if(heap->size>=heap->capacity){ 
+	heap->occupied_capacity++;
+
+	if(heap->occupied_capacity>=heap->capacity){ 
 		heap->capacity*=2;
-		heap->values=realloc(heap->values,sizeof(int)*heap->capacity);
+		heap->values=realloc(heap->values,sizeof(void*)*heap->capacity);
+		assert(heap->values!=NULL);
 	}
+	void* new_value=malloc(size);
+	assert(new_value!=NULL);
+	
+	memcpy(new_value, value, size);
 
-	int index=heap->size-1;
-	heap->values[index]=value;
+	unsigned long index=heap->occupied_capacity-1;
+	heap->values[index]=new_value;
 
-	while(index>0 && heap->values[(index-1)/2] > heap->values[index]) {
+	while(index>0 && compare(heap->values[(index-1)/2], heap->values[index])==heap->values[(index-1)/2]) {
 		switch_values(&heap->values[(index-1)/2],&heap->values[index]);
 		index=(index-1)/2;
 	}	
 }
 
-void minheap_print(struct minheap* heap)
+void minheap_print(struct minheap* heap, void (*print)(void*))
 {
 	assert(heap!=NULL);
 
-	for(unsigned long i=0;i < heap->size;i++) 
-		printf("%d, ",heap->values[i]);
-	printf("\n");
+	for(unsigned long i=0;i < heap->occupied_capacity;i++) 
+		print(heap->values[i]);
 }
 
-
-
-int minheap_extract(struct minheap* heap)
+void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 {	
 	assert(heap!=NULL);
 
-	int r=heap->values[0];
+	void* return_value=heap->values[0];
 
-	heap->values[0]=heap->values[heap->size-1];
-	heap->size--;
+	heap->values[0]=heap->values[heap->occupied_capacity-1];
+	heap->occupied_capacity--;
 
-	if(heap->size==1) return r;
-	else if(heap->size==2) {
-		if(heap->values[1]<heap->values[0]) switch_values(&heap->values[0],&heap->values[1]);
-		return r;
+	if(heap->occupied_capacity==1) return return_value;
+	else if(heap->occupied_capacity==2) {
+		if(compare(heap->values[1],heap->values[0])==heap->values[0]) switch_values(&heap->values[0],&heap->values[1]);
+		return return_value;
 	}
 
 
-	int index=0;
-	int index_left=1;
-	int index_right=2;
-	int smallest;
+	unsigned long index=0, index_left=1, index_right=2, smallest;
 
-	if(heap->values[index]<=heap->values[index_right] && heap->values[index]<=heap->values[index_left])
+	if(compare(heap->values[index],heap->values[index_right]) == heap->values[index] && compare(heap->values[index],heap->values[index_left])==heap->values[index])
 		smallest=index;
-	else if(heap->values[index_right]<=heap->values[index_left])
+	else if(compare(heap->values[index_right],heap->values[index_left]) == heap->values[index_right])
 		smallest=index_right;
 	else smallest=index_left;
 
@@ -90,68 +92,72 @@ int minheap_extract(struct minheap* heap)
 		index_right=smallest*2+1;
 		index_left=smallest*2;
 
-		if(index_right>(int)heap->size)
+		if(index_right>heap->occupied_capacity)
 		{
-			if(index_left==(int)heap->size)
+			if(index_left==heap->occupied_capacity)
 				smallest=index_left;
 			else smallest=index;
 		}
-		else if((heap->values[index]<=heap->values[index_right] && heap->values[index]<=heap->values[index_left]))
-			smallest=index;
-		else if(heap->values[index_right]<=heap->values[index_left])
-			smallest=index_right;
+		else if(compare(heap->values[index],heap->values[index_right]) == heap->values[index] && compare(heap->values[index],heap->values[index_left])==heap->values[index])
+		smallest=index;
+		else if(compare(heap->values[index_right],heap->values[index_left]) == heap->values[index_right])
+		smallest=index_right;
 		else smallest=index_left;
 
+	
 	}
 
-	return r;
-
-
+	return return_value;
 }
 
-int minheap_findmin(struct minheap* heap)
+void* minheap_findmin(struct minheap* heap)
 {	
 	assert(heap!=NULL);
 	return heap->values[0];
 }
 
-struct minheap* minheap_heapify(int* future_heap, int size)
+struct minheap* minheap_heapify(void** future_heap, unsigned long number_of_elements, size_t size, void* (*compare)(void*, void*))
 {
-	int i=0;
-	struct minheap* heap = minheap_init();
-	for(i=0;i<size;i++)
-		minheap_insert(heap, future_heap[i]);
+	unsigned long i=0;
+	struct minheap* heap = minheap_init(size);
+	for(i=0;i<number_of_elements;i++)
+		minheap_insert(heap, future_heap[i], size, compare);
 	return heap;
 
 }
 
 void minheap_free(struct minheap* heap)
 {
+	assert(heap!=NULL);
+
+	for(unsigned long i=0; i<heap->occupied_capacity; i++) free(heap->values[i]);
 	free(heap->values);
 	free(heap);
+	heap=NULL;
 }
 
-void minheap_delete(struct minheap* heap, int value)
+void minheap_delete(struct minheap* heap, void* value, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*))
 {
 	assert(heap!=NULL);	
 
-	for(int i=0;i<(int)heap->size;i++)
-		if(heap->values[i]==value){
+	for(unsigned long i=0;i<heap->occupied_capacity;i++)
+		if(check_equality(heap->values[i],value)){
 			switch_values(&heap->values[i], &heap->values[0]);	
-			switch_values(&heap->values[i], &heap->values[heap->size-1]);	
-			minheap_extract(heap);
+			switch_values(&heap->values[i], &heap->values[heap->occupied_capacity-1]);	
+			minheap_extract(heap, compare);
 			return;
 		}
 }
 
-void heapsort(int* arr, int size)
+void heapsort(void** arr, unsigned long number_of_elements, size_t size, void* (*compare)(void*, void*))
 {
-	struct minheap* heap=minheap_heapify(arr,size);
-	int i=0;
-	while(heap->size){
-		arr[i]=minheap_extract(heap);
+	struct minheap* heap=minheap_heapify(arr, number_of_elements, size, compare);
+	unsigned long i=0;
+	while(heap->occupied_capacity){
+		arr[i]=minheap_extract(heap, compare);
 		i++;
 	}
+
 	minheap_free(heap);
 }
 
