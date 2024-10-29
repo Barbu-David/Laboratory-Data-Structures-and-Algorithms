@@ -81,9 +81,7 @@ int bst_levels(struct bst_node* root)
 {
 	if(root==NULL) return 0;
 
-	int levels_left=1, levels_right=1;
-	levels_left+=bst_levels(root->left);
-	levels_right+=bst_levels(root->right);
+	int levels_left=1+bst_levels(root->left), levels_right=1+bst_levels(root->right);
 
 	return (levels_right>levels_left)? levels_right:levels_left;
 
@@ -241,6 +239,7 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 		free(target);
 		return;
 	}
+
 	struct bst_node* successor_parent = bst_successor_parent(target);
 	struct bst_node* successor = (successor_parent->left==NULL)? successor_parent:successor_parent->left;
 	

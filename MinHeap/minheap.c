@@ -14,9 +14,13 @@ void switch_values(int* a, int* b)
 struct minheap* minheap_init()
 {
 	struct minheap* heap = malloc(sizeof(struct minheap));
+	assert(heap!=NULL);
+
 	heap->size=0;
 	heap->capacity=4;	
+
 	heap->values = malloc(sizeof(int)*heap->capacity);
+	assert(heap->values!=NULL);
 
 	return heap;
 }
@@ -61,8 +65,8 @@ int minheap_extract(struct minheap* heap)
 	heap->size--;
 
 	if(heap->size==1) return r;
-	else if(heap->size==2 && heap->values[1]<heap->values[0]) {
-		switch_values(&heap->values[0],&heap->values[1]);
+	else if(heap->size==2) {
+		if(heap->values[1]<heap->values[0]) switch_values(&heap->values[0],&heap->values[1]);
 		return r;
 	}
 
@@ -78,10 +82,11 @@ int minheap_extract(struct minheap* heap)
 		smallest=index_right;
 	else smallest=index_left;
 
+
 	while(smallest!=index){
 
 		switch_values(&heap->values[index],&heap->values[smallest]);
-		index=smallest;;
+		index=smallest;
 		index_right=smallest*2+1;
 		index_left=smallest*2;
 
@@ -128,16 +133,13 @@ void minheap_free(struct minheap* heap)
 
 void minheap_delete(struct minheap* heap, int value)
 {
-	struct minheap* heap2=malloc(sizeof(struct minheap));
+	assert(heap!=NULL);	
 
-	int i=0;
-	for(i=0;i<(int)heap->size;i++)
+	for(int i=0;i<(int)heap->size;i++)
 		if(heap->values[i]==value){
-			heap2->size=heap->size-i;
-			heap2->values=&heap->values[i];
-			printf("heap2root %d\n",minheap_extract(heap2));
-			heap->size--;
-			free(heap2);
+			switch_values(&heap->values[i], &heap->values[0]);	
+			switch_values(&heap->values[i], &heap->values[heap->size-1]);	
+			minheap_extract(heap);
 			return;
 		}
 }
