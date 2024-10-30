@@ -65,7 +65,6 @@ void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 	assert(heap!=NULL);
 
 	void* return_value=heap->values[0];
-	free(heap->values[0]);
 	heap->values[0]=heap->values[heap->occupied_capacity-1];
 	heap->occupied_capacity--;
 
@@ -75,23 +74,9 @@ void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 		return return_value;
 	}
 
-
-	unsigned long index=0, index_left=1, index_right=2, smallest;
-
-	if(compare(heap->values[index],heap->values[index_right]) == heap->values[index_right] && compare(heap->values[index],heap->values[index_left])==heap->values[index_left])
-		smallest=index;
-	else if(compare(heap->values[index_right],heap->values[index_left]) == heap->values[index_left])
-		smallest=index_right;
-	else smallest=index_left;
-
+	unsigned long index=0, index_left=1, index_right=2, smallest=-1;
 
 	while(smallest!=index){
-
-		switch_values(&heap->values[index],&heap->values[smallest]);
-		index=smallest;
-		index_right=smallest*2+2;
-		index_left=smallest*2+1;
-
 		if(index_right>heap->occupied_capacity)
 		{
 			if(index_left==heap->occupied_capacity)
@@ -103,8 +88,13 @@ void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 		else if(compare(heap->values[index_right],heap->values[index_left]) == heap->values[index_left])
 		smallest=index_right;
 		else smallest=index_left;
-
 	
+		switch_values(&heap->values[index],&heap->values[smallest]);
+		index=smallest;
+		index_right=smallest*2+2;
+		index_left=smallest*2+1;
+
+
 	}
 
 	return return_value;
@@ -143,8 +133,8 @@ void minheap_delete(struct minheap* heap, void* value, void* (*compare)(void*, v
 	for(unsigned long i=0;i<heap->occupied_capacity;i++)
 		if(check_equality(heap->values[i],value)){
 			switch_values(&heap->values[i], &heap->values[0]);	
-			switch_values(&heap->values[i], &heap->values[heap->occupied_capacity-1]);	
-			minheap_extract(heap, compare);
+			switch_values(&heap->values[i], &heap->values[heap->occupied_capacity-1]);
+			free(minheap_extract(heap, compare));
 			return;
 		}
 }

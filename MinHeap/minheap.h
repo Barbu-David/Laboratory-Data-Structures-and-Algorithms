@@ -17,7 +17,7 @@ void minheap_insert(struct minheap* heap, void* value, size_t size, void* (*comp
 void minheap_print(struct minheap* heap, void (*print)(void*));
 
 void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*));
-void minheap_delete(struct minheap* heap, void* value, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*));
+void minheap_delete(struct minheap* heap, void* value, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*)); //to do
 
 void* minheap_findmin(struct minheap* heap);
 

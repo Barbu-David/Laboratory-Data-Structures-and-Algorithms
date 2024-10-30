@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include"minheap.h"
-#include"stdlib.h"
+#include<stdlib.h>
 
 struct person{
         char initial;
@@ -54,7 +54,7 @@ int main(void)
 	minheap_print(heap, print_for_ints);
 	printf("\n");	
 
-	minheap_extract(heap, compare_for_ints);
+	free(minheap_extract(heap, compare_for_ints));
 
 	minheap_print(heap, print_for_ints);
 	printf("\n");	
