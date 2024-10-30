@@ -78,9 +78,9 @@ void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 
 	unsigned long index=0, index_left=1, index_right=2, smallest;
 
-	if(compare(heap->values[index],heap->values[index_right]) == heap->values[index] && compare(heap->values[index],heap->values[index_left])==heap->values[index])
+	if(compare(heap->values[index],heap->values[index_right]) == heap->values[index_right] && compare(heap->values[index],heap->values[index_left])==heap->values[index_left])
 		smallest=index;
-	else if(compare(heap->values[index_right],heap->values[index_left]) == heap->values[index_right])
+	else if(compare(heap->values[index_right],heap->values[index_left]) == heap->values[index_left])
 		smallest=index_right;
 	else smallest=index_left;
 
@@ -89,8 +89,8 @@ void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 
 		switch_values(&heap->values[index],&heap->values[smallest]);
 		index=smallest;
-		index_right=smallest*2+1;
-		index_left=smallest*2;
+		index_right=smallest*2+2;
+		index_left=smallest*2+1;
 
 		if(index_right>heap->occupied_capacity)
 		{
@@ -98,9 +98,9 @@ void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 				smallest=index_left;
 			else smallest=index;
 		}
-		else if(compare(heap->values[index],heap->values[index_right]) == heap->values[index] && compare(heap->values[index],heap->values[index_left])==heap->values[index])
+		else if(compare(heap->values[index],heap->values[index_right]) == heap->values[index_right] && compare(heap->values[index],heap->values[index_left])==heap->values[index_left])
 		smallest=index;
-		else if(compare(heap->values[index_right],heap->values[index_left]) == heap->values[index_right])
+		else if(compare(heap->values[index_right],heap->values[index_left]) == heap->values[index_left])
 		smallest=index_right;
 		else smallest=index_left;
 
