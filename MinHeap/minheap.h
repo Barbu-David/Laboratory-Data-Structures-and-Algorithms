@@ -22,7 +22,6 @@ void minheap_delete(struct minheap* heap, void* value, void* (*compare)(void*, v
 void* minheap_findmin(struct minheap* heap);
 
 struct minheap* minheap_heapify(void** future_heap, unsigned long number_of_elements, size_t size, void* (*compare)(void*, void*));
-void heapsort(void** arr, unsigned long number_of_elements, size_t size, void* (*compare)(void*, void*));
 
 void minheap_free(struct minheap* heap);
 

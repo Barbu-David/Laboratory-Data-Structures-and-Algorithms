@@ -2,6 +2,26 @@
 #include"minheap.h"
 #include"stdlib.h"
 
+struct person{
+        char initial;
+        int age;
+};
+
+void* compare_for_pers(void* a, void* b)
+{
+        return ((*(struct person*)a).age >= (*(struct person*)b).age) ? a : b;
+}
+
+bool check_equality_for_pers(void* a, void* b)
+{
+        return ((*(struct person*)a).age == (*(struct person*)b).age);
+}
+
+void print_for_pers(void* a)
+{
+        printf("%c ", (*(struct person*)a).initial);
+}
+
 void* compare_for_ints(void* a, void* b)
 {
         return *(int*)a >= *(int*)b? a:b;
@@ -44,8 +64,35 @@ int main(void)
 	minheap_delete(heap, &e, compare_for_ints, check_equality_for_ints);
 
 	minheap_print(heap, print_for_ints);
+	printf("\n");
 
 	minheap_free(heap);
 
+	struct person p[3];
+	p[0].age=30;
+	p[0].initial='a';
+
+	p[1].age=35;
+	p[1].initial='b';
+
+	p[2].age=25;
+	p[2].initial='c';
+
+	void** q=malloc(sizeof(void*)*4);
+	int i;
+	for(i=0; i<3; i++) q[i]=&p[i];
+
+	struct minheap* heap2=minheap_heapify(q, 3, sizeof(struct person), compare_for_pers);
+
+
+	minheap_print(heap2, print_for_pers);
+	printf("\n");
+	minheap_delete(heap2, &p[2], compare_for_pers, check_equality_for_pers);
+
+	minheap_print(heap2, print_for_pers);
+	
+	minheap_free(heap2);
+	free(q);
+		
 	return 0;
 }

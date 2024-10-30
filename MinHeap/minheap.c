@@ -65,7 +65,7 @@ void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 	assert(heap!=NULL);
 
 	void* return_value=heap->values[0];
-
+	free(heap->values[0]);
 	heap->values[0]=heap->values[heap->occupied_capacity-1];
 	heap->occupied_capacity--;
 
@@ -147,17 +147,5 @@ void minheap_delete(struct minheap* heap, void* value, void* (*compare)(void*, v
 			minheap_extract(heap, compare);
 			return;
 		}
-}
-
-void heapsort(void** arr, unsigned long number_of_elements, size_t size, void* (*compare)(void*, void*))
-{
-	struct minheap* heap=minheap_heapify(arr, number_of_elements, size, compare);
-	unsigned long i=0;
-	while(heap->occupied_capacity){
-		arr[i]=minheap_extract(heap, compare);
-		i++;
-	}
-
-	minheap_free(heap);
 }
 
