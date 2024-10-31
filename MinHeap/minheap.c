@@ -79,8 +79,6 @@ void minheap_heapify_down(void** values, long unsigned number_of_elements, long 
 		index_right=smallest*2+2;
 		index_left=smallest*2+1;
 	}
-
-
 }
 
 
@@ -106,7 +104,6 @@ void minheap_insert(struct minheap* heap, void* value, size_t size, void* (*comp
 	heap->values[index]=new_value;
 
 	minheap_heapify_up(heap->values, index, compare);
-
 }
 
 void minheap_print(struct minheap* heap, void (*print)(void*))
@@ -164,7 +161,7 @@ void minheap_delete(struct minheap* heap, void* value, size_t size, void* (*comp
 		if(check_equality(heap->values[i],value)){
 			memcpy(heap->values[i], heap->values[0], size);
 			minheap_heapify_up(heap->values, i, compare);
-			minheap_extract(heap, compare);			
+			free(minheap_extract(heap, compare));			
 			return;
 		}
 }

@@ -197,7 +197,6 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 	struct bst_node* target = *root;
 
 	struct bst_node* parent = bst_search_parent(target, value, check_equality, compare);
-
 		
 	if(parent!=NULL) target = bst_search_child_with_value(target, value, check_equality);	
 
