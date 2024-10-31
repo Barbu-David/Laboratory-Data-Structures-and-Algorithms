@@ -48,7 +48,6 @@ int main(void)
 	a=23;
 	bst_push(bst, &a, sizeof(int), compare_for_ints);
 
-
 	a=25;
 	bst_push(bst, &a, sizeof(int), compare_for_ints);
 

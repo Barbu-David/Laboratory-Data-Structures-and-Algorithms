@@ -139,8 +139,11 @@ void minheap_heapify_array(void** future_heap, unsigned long number_of_elements,
 	for(index = number_of_elements-1; index>0; index--)
 	{
 		if(index*2+1<number_of_elements)
-			minheap_heapify_up(future_heap, index, compare);
-	}	
+			minheap_heapify_down(future_heap, number_of_elements - index, index, compare);
+	}
+	if(1<number_of_elements)
+		minheap_heapify_down(future_heap, number_of_elements, 0, compare);
+	
 }
 
 void minheap_free(struct minheap* heap)
@@ -165,7 +168,7 @@ void minheap_delete(struct minheap* heap, void* value, size_t size, void* (*comp
 			return;
 		}
 }
-
+/*
 void minheap_heapsort(void** values, long unsigned number_of_elements, void* (*compare)(void*, void*))
 {
 	minheap_heapify_array(values, number_of_elements, compare);
@@ -173,3 +176,4 @@ void minheap_heapsort(void** values, long unsigned number_of_elements, void* (*c
 		minheap_heapify_down(values, number_of_elements, index, compare);
 	}
 }
+*/
