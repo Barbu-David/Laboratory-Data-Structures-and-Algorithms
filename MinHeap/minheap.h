@@ -7,24 +7,30 @@
 struct minheap {
 		void** values;
 		long unsigned occupied_capacity, capacity;
-};		
+};	
 
 
 struct minheap* minheap_init();
+struct minheap* minheap_init_from_array(void** values, long unsigned number_of_elements, size_t size);
 
 void minheap_insert(struct minheap* heap, void* value, size_t size, void* (*compare)(void*, void*));
 
 void minheap_print(struct minheap* heap, void (*print)(void*));
 
+void minheap_heapify_up(void** values, long unsigned index, void* (*compare)(void*, void*));
+void minheap_heapify_down(void** values, long unsigned number_of_elements, long unsigned index, void* (*compare)(void*, void*));
+
 void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*));
-void minheap_delete(struct minheap* heap, void* value, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*)); //to do
+void minheap_delete(struct minheap* heap, void* value, size_t size, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*)); 
 
 void* minheap_findmin(struct minheap* heap);
-
-struct minheap* minheap_heapify(void** future_heap, unsigned long number_of_elements, size_t size, void* (*compare)(void*, void*));
 
 void minheap_free(struct minheap* heap);
 
 void switch_values(void** a, void** b);
+
+void minheap_heapify_array(void** future_heap, unsigned long number_of_elements, void* (*compare)(void*, void*));
+
+void heapsort(void** values, long unsigned number_of_elements, void* (*compare)(void*, void*));
 
 #endif

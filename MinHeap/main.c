@@ -61,7 +61,7 @@ int main(void)
 
 	int e=19;
 
-	minheap_delete(heap, &e, compare_for_ints, check_equality_for_ints);
+	minheap_delete(heap, &e, sizeof(int), compare_for_ints, check_equality_for_ints);
 
 	minheap_print(heap, print_for_ints);
 	printf("\n");
@@ -82,17 +82,17 @@ int main(void)
 	int i;
 	for(i=0; i<3; i++) q[i]=&p[i];
 
-	struct minheap* heap2=minheap_heapify(q, 3, sizeof(struct person), compare_for_pers);
-
-
+	minheap_heapify_array(q, 3, compare_for_pers);
+	
+	struct minheap* heap2=minheap_init_from_array(q, 3, sizeof(struct person));
+	
 	minheap_print(heap2, print_for_pers);
 	printf("\n");
-	minheap_delete(heap2, &p[2], compare_for_pers, check_equality_for_pers);
+	minheap_delete(heap2, &p[2], sizeof(struct person),compare_for_pers, check_equality_for_pers);
 
 	minheap_print(heap2, print_for_pers);
 	
 	minheap_free(heap2);
-	free(q);
-		
+	free(q);		
 	return 0;
 }
