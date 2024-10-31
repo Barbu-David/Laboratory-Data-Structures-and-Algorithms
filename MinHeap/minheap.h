@@ -31,6 +31,6 @@ void switch_values(void** a, void** b);
 
 void minheap_heapify_array(void** future_heap, unsigned long number_of_elements, void* (*compare)(void*, void*));
 
-void heapsort(void** values, long unsigned number_of_elements, void* (*compare)(void*, void*));
+void minheap_heapsort(void** values, long unsigned number_of_elements, void* (*compare)(void*, void*));
 
 #endif

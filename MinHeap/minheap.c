@@ -3,7 +3,6 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
-#include<limits.h>
 
 void switch_values(void** a, void** b)
 {
@@ -59,7 +58,7 @@ void minheap_heapify_up(void** values, long unsigned index, void* (*compare)(voi
 void minheap_heapify_down(void** values, long unsigned number_of_elements, long unsigned index, void* (*compare)(void*, void*))
 {
 
-	unsigned long index_left=index*2+1, index_right=index*2+2, smallest=-1;
+	unsigned long index_left=index*2+1, index_right=index*2+2, smallest=number_of_elements+1;
 
 	while(smallest!=index){
 
@@ -172,7 +171,8 @@ void minheap_delete(struct minheap* heap, void* value, size_t size, void* (*comp
 
 void minheap_heapsort(void** values, long unsigned number_of_elements, void* (*compare)(void*, void*))
 {
-	for(unsigned long index=0; index<number_of_elements; index++) {
+	minheap_heapify_array(values, number_of_elements, compare);
+	for(unsigned long index=1; index<number_of_elements; index++) {
 		minheap_heapify_down(values, number_of_elements, index, compare);
 	}
 }
