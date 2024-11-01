@@ -106,6 +106,12 @@ void minheap_print(struct minheap* heap, void (*print)(void*))
 		print(heap->values[i]);
 }
 
+void* minheap_findmin(struct minheap* heap)
+{	
+	assert(heap!=NULL);
+	return heap->values[0];
+}
+
 void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 {	
 	assert(heap!=NULL);
@@ -119,12 +125,18 @@ void* minheap_extract(struct minheap* heap, void* (*compare)(void*, void*))
 	return return_value;
 }
 
-void* minheap_findmin(struct minheap* heap)
-{	
-	assert(heap!=NULL);
-	return heap->values[0];
-}
+void minheap_delete(struct minheap* heap, void* value, size_t size, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*))
+{
+	assert(heap!=NULL);	
 
+	for(unsigned long i=0;i<heap->occupied_capacity;i++)
+		if(check_equality(heap->values[i],value)){
+			memcpy(heap->values[i], heap->values[0], size);
+			minheap_heapify_up(heap->values, i, compare);
+			free(minheap_extract(heap, compare));			
+			return;
+		}
+}
 void minheap_heapify_array(void** future_heap, unsigned long number_of_elements, void* (*compare)(void*, void*))
 {
 	unsigned long index;
@@ -143,15 +155,4 @@ void minheap_free(struct minheap* heap)
 	heap=NULL;
 }
 
-void minheap_delete(struct minheap* heap, void* value, size_t size, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*))
-{
-	assert(heap!=NULL);	
 
-	for(unsigned long i=0;i<heap->occupied_capacity;i++)
-		if(check_equality(heap->values[i],value)){
-			memcpy(heap->values[i], heap->values[0], size);
-			minheap_heapify_up(heap->values, i, compare);
-			free(minheap_extract(heap, compare));			
-			return;
-		}
-}

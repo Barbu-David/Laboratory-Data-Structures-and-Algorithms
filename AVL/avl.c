@@ -165,7 +165,7 @@ struct avl_node* avl_search(struct avl_node* root, void* value, bool (*check_equ
 {
 	assert(value!=NULL);
 
-	if(check_equality(root, root->value)) return root;
+	if(check_equality(value, root->value)) return root;
 	return avl_search_child_with_value(avl_search_parent(root,value,check_equality,compare), value, check_equality);
 }
 

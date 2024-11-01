@@ -171,7 +171,7 @@ struct bst_node* bst_search(struct bst_node* root, void* value, bool (*check_equ
 {
 	assert(value!=NULL);
 
-	if(check_equality(root, root->value)) return root;
+	if(check_equality(value, root->value)) return root;
 	return bst_search_child_with_value(bst_search_parent(root,value,check_equality,compare), value, check_equality);
 }
 
