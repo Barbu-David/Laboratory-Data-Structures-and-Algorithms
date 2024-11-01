@@ -25,6 +25,5 @@ void* minheap_findmin(struct minheap* heap);
 void minheap_free(struct minheap* heap);
 
 void minheap_heapify_array(void** future_heap, unsigned long number_of_elements, void* (*compare)(void*, void*));
-//void minheap_heapsort(void** values, long unsigned number_of_elements, void* (*compare)(void*, void*));
 
 #endif

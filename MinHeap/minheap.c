@@ -9,7 +9,6 @@ void switch_values(void** a, void** b)
 	void* tmp=*a;
 	*a=*b;
 	*b=tmp;
-
 }
 
 struct minheap* minheap_init()
@@ -34,7 +33,7 @@ struct minheap* minheap_init_from_array(void** values, long unsigned number_of_e
 
 	heap->occupied_capacity=number_of_elements;
 	heap->capacity=number_of_elements+1;	
-	
+
 	heap->values=malloc(sizeof(void*)*number_of_elements);
 
 	for(unsigned long index=0; index<number_of_elements; index++){
@@ -49,38 +48,31 @@ struct minheap* minheap_init_from_array(void** values, long unsigned number_of_e
 
 void minheap_heapify_up(void** values, long unsigned index, void* (*compare)(void*, void*))
 {
-		while(index>0 && compare(values[(index-1)/2], values[index])==values[(index-1)/2]) {
+	while(index>0 && compare(values[(index-1)/2], values[index])==values[(index-1)/2]) {
 		switch_values(&values[(index-1)/2],&values[index]);
 		index=(index-1)/2;
 	}	
 }
 
-void minheap_heapify_down(void** values, long unsigned number_of_elements, long unsigned index, void* (*compare)(void*, void*))
+void minheap_heapify_down(void** values, unsigned long number_of_elements, unsigned long index, void* (*compare)(void*, void*)) 
 {
+	unsigned long index_left = index * 2 + 1;
+	unsigned long index_right = index * 2 + 2;
+	unsigned long smallest = index;
 
-	unsigned long index_left=index*2+1, index_right=index*2+2, smallest=number_of_elements+1;
+	if(index_left < number_of_elements) 
+		if(compare(values[smallest], values[index_left]) == values[smallest]) 
+			smallest = index_left;
 
-	while(smallest!=index){
+	if(index_right < number_of_elements) 
+		if(compare(values[smallest], values[index_right]) == values[smallest]) 
+			smallest = index_right;
 
-		if(index_right>number_of_elements)
-		{
-			if(index_left==number_of_elements && compare(values[index], values[index_left])==values[index])
-				smallest=index_left;
-			else smallest=index;
-		}
-		else if(compare(values[index],values[index_right]) == values[index_right] && compare(values[index],values[index_left])==values[index_left])
-		smallest=index;
-		else if(compare(values[index_right], values[index_left]) == values[index_left])
-		smallest=index_right;
-		else smallest=index_left;
-	
-		switch_values(&values[index],&values[smallest]);
-		index=smallest;
-		index_right=smallest*2+2;
-		index_left=smallest*2+1;
+	if(smallest != index) {
+		switch_values(&values[index], &values[smallest]);
+		minheap_heapify_down(values, number_of_elements, smallest, compare);   
 	}
 }
-
 
 void minheap_insert(struct minheap* heap, void* value, size_t size, void* (*compare)(void*, void*))
 {
@@ -97,7 +89,7 @@ void minheap_insert(struct minheap* heap, void* value, size_t size, void* (*comp
 
 	void* new_value=malloc(size);
 	assert(new_value!=NULL);
-	
+
 	memcpy(new_value, value, size);
 
 	unsigned long index=heap->occupied_capacity-1;
@@ -136,14 +128,9 @@ void* minheap_findmin(struct minheap* heap)
 void minheap_heapify_array(void** future_heap, unsigned long number_of_elements, void* (*compare)(void*, void*))
 {
 	unsigned long index;
-	for(index = number_of_elements-1; index>0; index--)
-	{
-		if(index*2+1<number_of_elements)
-			minheap_heapify_down(future_heap, number_of_elements - index, index, compare);
-	}
-	if(1<number_of_elements)
-		minheap_heapify_down(future_heap, number_of_elements, 0, compare);
-	
+	for(index = (number_of_elements-1)/2; index>0; index--)
+		minheap_heapify_down(future_heap,number_of_elements, index, compare);
+	minheap_heapify_down(future_heap,number_of_elements, 0, compare);
 }
 
 void minheap_free(struct minheap* heap)
@@ -168,12 +155,3 @@ void minheap_delete(struct minheap* heap, void* value, size_t size, void* (*comp
 			return;
 		}
 }
-/*
-void minheap_heapsort(void** values, long unsigned number_of_elements, void* (*compare)(void*, void*))
-{
-	minheap_heapify_array(values, number_of_elements, compare);
-	for(unsigned long index=1; index<number_of_elements; index++) {
-		minheap_heapify_down(values, number_of_elements, index, compare);
-	}
-}
-*/

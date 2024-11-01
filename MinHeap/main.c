@@ -41,25 +41,30 @@ int main(void)
 {
 
 	struct minheap* heap=minheap_init();
-	int a1=5;
-	int b=15;
-	int c=19;
-	int d =17;
-
-	minheap_insert(heap, &a1, sizeof(int), compare_for_ints);	
-	minheap_insert(heap, &b, sizeof(int), compare_for_ints);
-	minheap_insert(heap, &c, sizeof(int), compare_for_ints);
-        minheap_insert(heap, &d, sizeof(int), compare_for_ints);
+	int a[6];
+	a[0]=10;
+	a[1]=17;
+	a[2]=13;
+	a[3]=8;
+	a[4]=20;
+	a[5]=1;
+	
+	minheap_insert(heap, &a[0], sizeof(int), compare_for_ints);	
+	minheap_insert(heap, &a[1], sizeof(int), compare_for_ints);
+	minheap_insert(heap, &a[2], sizeof(int), compare_for_ints);
+        minheap_insert(heap, &a[3], sizeof(int), compare_for_ints);
+        minheap_insert(heap, &a[4], sizeof(int), compare_for_ints);
+        minheap_insert(heap, &a[5], sizeof(int), compare_for_ints);
 
 	minheap_print(heap, print_for_ints);
-printf("\n");	
+	printf("\n");	
 
 	free(minheap_extract(heap, compare_for_ints));
 
 	minheap_print(heap, print_for_ints);
 	printf("\n");	
 
-	int e=19;
+	int e=13;
 
 	minheap_delete(heap, &e, sizeof(int), compare_for_ints, check_eperson_arrayuality_for_ints);
 
@@ -67,7 +72,7 @@ printf("\n");
 	printf("\n");
 
 	minheap_free(heap);
-/*
+
 	struct person p[3];
 	p[0].age=30;
 	p[0].initial='a';
@@ -95,20 +100,5 @@ printf("\n");
 	minheap_free(heap2);
 	free(person_array);	
 
-	void** int_array=malloc(sizeof(int)*6);
-	int a[6];
-	a[0]=10;
-	a[1]=17;
-	a[2]=13;
-	a[3]=8;
-	a[4]=20;
-	a[5]=1;
-		
-	for(i=0; i<6; i++) int_array[i]=&a[i];
-
-	minheap_heapsort(int_array, 6, compare_for_ints);
-	for(i=0; i<6; i++) printf("%d ", a[i]);
-	free(int_array);
-*/
 	return 0;
 }
