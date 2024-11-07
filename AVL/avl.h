@@ -7,7 +7,7 @@
 struct avl_node { 
         struct  avl_node *right;
         struct  avl_node *left;
-	unsigned long balance_factor;
+	int balance_factor;
         void* value;
 };
 
