@@ -38,6 +38,14 @@ int main(void)
 
 	trie_print(trie);
 
+	trie_delete(trie, cut, 3, 0);
+	if(!trie_search(trie, cut, 3)) printf("cut deleted\n");
+	trie_print(trie);
+
+	trie_delete(trie, cut, 6, 0);
+	if(!trie_search(trie, cut, 6)) printf("cutter deleted\n");
+	trie_print(trie);
+
 	trie_free(trie);
 
 	return 0;

@@ -86,7 +86,24 @@ void trie_insert(struct trie_node* root, char* word, int word_size)
 
 void trie_delete(struct trie_node* root, char* word, int word_size, int depth)
 {
+	if(root==NULL) return;
+	
+	if(depth==word_size) {
+		if(root->end_flag) root->end_flag=false;
 
+		return;
+	}
+
+	int index;
+	if(word[depth]==' ') index=SPACE_INDEX;
+	else index=word[depth]-'a';
+
+	trie_delete(root->children[index], word, word_size, depth+1);
+	
+	if(trie_empty(root) && !root->end_flag) {
+		free(root);
+		root=NULL;
+	}
 }
 
 void trie_free(struct trie_node* root)
