@@ -2,6 +2,7 @@
 #define TRIE_H
 
 #define ALPHABET_SIZE 27
+#define SPACE_INDEX 26
 #include<stdbool.h>
 
 struct trie_node {
@@ -18,5 +19,7 @@ void trie_delete(struct trie_node* root, char* word, int word_size, int depth);
 
 bool trie_empty(struct trie_node* root);
 void trie_print(struct trie_node* root);
+
+void trie_free(struct trie_node* root);
 
 #endif
