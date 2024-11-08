@@ -11,9 +11,9 @@ struct avl_node {
         void* value;
 };
 
-struct avl_node* bst_init(void* value, size_t size); 
+struct avl_node* avl_init(void* value, size_t size); 
 
-void avl_push(struct avl_node* root, void* value, size_t size, void* (*compare)(void*, void*));
+void avl_push(struct avl_node** root, void* value, size_t size, void* (*compare)(void*, void*));
 void avl_pop(struct avl_node** root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
 
 void avl_preorder_print(struct avl_node* root, void (*print)(void*));

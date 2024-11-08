@@ -35,33 +35,121 @@ int avl_levels(struct avl_node* root)
 
 int avl_node_balance_factor(struct avl_node* root)
 {
-	if(root==NULL) { 
-		fprintf(stderr,"Uninitialized tree\n");
-		return 0;	
-	}
+	if(root==NULL) 	return 0;	
 
 	root->balance_factor=avl_levels(root->left)-avl_levels(root->right);
 	return root->balance_factor;
 
 }
-void avl_push(struct avl_node* root, void* value, size_t size, void* (*compare)(void*, void*))
+
+struct avl_node* avl_right_rotate(struct avl_node* root)
+{
+	if(root==NULL) return NULL;
+	
+	struct avl_node* new_root=root->left;
+	root->left=new_root->right;
+	new_root->right=root;
+	avl_node_balance_factor(root);
+	avl_node_balance_factor(new_root);
+
+	return new_root;
+}
+
+struct avl_node* avl_left_rotate(struct avl_node* root)
+{
+	if(root==NULL) return NULL;
+	
+	struct avl_node* new_root=root->right;
+	root->right=new_root->left;
+	new_root->left=root;
+	avl_node_balance_factor(root);
+	avl_node_balance_factor(new_root);
+
+	return new_root;
+}
+
+struct avl_node* avl_right_left_rotate(struct avl_node* root)
 {	
-	if(root==NULL) { 
+	if(root==NULL) return NULL;
+
+	root->right=avl_left_rotate(root->right);
+	return avl_left_rotate(root);
+
+}
+
+struct avl_node* avl_left_right_rotate(struct avl_node* root)
+{	
+	if(root==NULL) return NULL;
+
+	root->left=avl_left_rotate(root->left);
+	return avl_right_rotate(root);
+}
+
+struct avl_node* avl_balance(struct avl_node* root)
+{
+	if(root==NULL) return NULL;
+
+	if(root->balance_factor>1) {
+
+		int left_right_factor, left_left_factor;
+		if(root->left==NULL) {	
+			left_right_factor=0;
+			left_left_factor=0;
+		}
+		else {
+			if(root->left->left!=NULL) left_left_factor=root->left->left->balance_factor;
+			else left_left_factor=0;
+			if(root->left->right!=NULL) left_right_factor=root->left->right->balance_factor;
+			else left_right_factor=0;
+		}
+
+		if(left_left_factor>=left_right_factor) 
+			return avl_right_rotate(root);
+		else return avl_left_right_rotate(root);
+
+	}
+	else if(root->balance_factor<-1){
+	
+		int right_right_factor, right_left_factor;
+		if(root->right==NULL) {	
+			right_right_factor=0;
+			right_left_factor=0;
+		}
+		else {
+			if(root->right->left!=NULL) right_left_factor=root->right->left->balance_factor;
+			else right_left_factor=0;
+			if(root->right->right!=NULL) right_right_factor=root->right->right->balance_factor;
+			else right_right_factor=0;
+		}
+
+		if(right_left_factor<right_right_factor) 
+			return avl_left_rotate(root);
+		else return avl_right_left_rotate(root);
+
+	}
+
+	return root;	
+}
+
+void avl_push(struct avl_node** root, void* value, size_t size, void* (*compare)(void*, void*))
+{	
+	if(*root==NULL) { 
 		fprintf(stderr,"Pushed to uninitialized tree\n");
 		return;	
 	}
 
 	assert(value!=NULL);
 
-	if(compare(value,root->value)==root->value){
-		if(root->left!=NULL)
-			avl_push(root->left, value, size, compare);
-		else root->left=avl_init(value, size);	
+	if(compare(value,(*root)->value)==(*root)->value){
+		if((*root)->left!=NULL)
+			avl_push(&((*root)->left), value, size, compare);
+		else (*root)->left=avl_init(value, size);	
 	}
-	else if(root->right!=NULL) avl_push(root->right, value, size, compare);
-	else root->right=avl_init(value, size);
+	else if((*root)->right!=NULL) avl_push(&((*root)->right), value, size, compare);
+	else (*root)->right=avl_init(value, size);
 
-	avl_node_balance_factor(root);
+	avl_node_balance_factor(*root);
+
 }
 
 void avl_inorder_print(struct avl_node* root, void (*print)(void*))
@@ -219,6 +307,7 @@ void avl_pop(struct avl_node** root, void* value, bool (*check_equality)(void*, 
 			if (target == parent->left) parent->left = NULL;
 			else if (target == parent->right) parent->right = NULL;
 			avl_node_balance_factor(parent);
+			parent=avl_balance(parent);
 		} 
 		else *root = NULL;
 
@@ -233,6 +322,7 @@ void avl_pop(struct avl_node** root, void* value, bool (*check_equality)(void*, 
 			if (parent->right == target) parent->right = target->left;
 			else parent->left = target->left;
 			avl_node_balance_factor(parent);
+			parent=avl_balance(parent);
 		} 
 		else *root = NULL;
 
@@ -246,6 +336,7 @@ void avl_pop(struct avl_node** root, void* value, bool (*check_equality)(void*, 
 			if (parent->right == target) parent->right = target->right;
 			else parent->left = target->right;
 			avl_node_balance_factor(parent);
+			parent=avl_balance(parent);
 		} 	
 		else *root = NULL;
 
@@ -263,7 +354,9 @@ void avl_pop(struct avl_node** root, void* value, bool (*check_equality)(void*, 
 
 	if (successor_parent->left == successor) successor_parent->left = successor->right;
 	else successor_parent->right = successor->right;
+	
 	avl_node_balance_factor(successor_parent);
+	successor_parent=avl_balance(successor_parent);
 
 	free(stored_target_value);
 	free(successor);
