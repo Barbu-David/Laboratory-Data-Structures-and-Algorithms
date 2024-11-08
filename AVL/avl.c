@@ -47,8 +47,12 @@ struct avl_node* avl_right_rotate(struct avl_node* root)
 	if(root==NULL) return NULL;
 	
 	struct avl_node* new_root=root->left;
+
+	if(new_root==NULL) return root; 
+
 	root->left=new_root->right;
 	new_root->right=root;
+
 	avl_node_balance_factor(root);
 	avl_node_balance_factor(new_root);
 
@@ -58,8 +62,11 @@ struct avl_node* avl_right_rotate(struct avl_node* root)
 struct avl_node* avl_left_rotate(struct avl_node* root)
 {
 	if(root==NULL) return NULL;
-	
+
 	struct avl_node* new_root=root->right;
+
+	if(new_root==NULL) return root; 
+
 	root->right=new_root->left;
 	new_root->left=root;
 	avl_node_balance_factor(root);
@@ -109,7 +116,7 @@ struct avl_node* avl_balance(struct avl_node* root)
 
 	}
 	else if(root->balance_factor<-1){
-	
+
 		int right_right_factor, right_left_factor;
 		if(root->right==NULL) {	
 			right_right_factor=0;
@@ -354,7 +361,7 @@ void avl_pop(struct avl_node** root, void* value, bool (*check_equality)(void*, 
 
 	if (successor_parent->left == successor) successor_parent->left = successor->right;
 	else successor_parent->right = successor->right;
-	
+
 	avl_node_balance_factor(successor_parent);
 	successor_parent=avl_balance(successor_parent);
 

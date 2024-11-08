@@ -49,6 +49,35 @@ int main(void)
 	avl_push(&avl, &a, sizeof(int), compare_for_ints);
 
 	avl_preorder_print(avl, print_for_ints);
+	printf("\n");
+
+	a=40;
+	avl_push(&avl, &a, sizeof(int), compare_for_ints);
+
+	a=50;
+	avl_push(&avl, &a, sizeof(int), compare_for_ints);
+
+	avl_preorder_print(avl, print_for_ints);
+	printf("\n");
+
+	a=25;
+	avl_push(&avl, &a, sizeof(int), compare_for_ints);
+
+	avl_preorder_print(avl, print_for_ints);
+	printf("\n");
+
+	a=35;
+	avl_push(&avl, &a, sizeof(int), compare_for_ints);
+
+	avl_preorder_print(avl, print_for_ints);
+	printf("\n");
+
+	avl_pop(&avl, &a, check_equality_for_ints, compare_for_ints);
+	
+	avl_preorder_print(avl, print_for_ints);
+	printf("\n");
+
+	avl_free(&avl);
 
 	return 0;
 }
