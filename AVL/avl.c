@@ -72,7 +72,7 @@ struct avl_node* avl_right_left_rotate(struct avl_node* root)
 {	
 	if(root==NULL) return NULL;
 
-	root->right=avl_left_rotate(root->right);
+	root->right=avl_right_rotate(root->right);
 	return avl_left_rotate(root);
 
 }
@@ -149,7 +149,7 @@ void avl_push(struct avl_node** root, void* value, size_t size, void* (*compare)
 	else (*root)->right=avl_init(value, size);
 
 	avl_node_balance_factor(*root);
-
+	*root=avl_balance(*root);
 }
 
 void avl_inorder_print(struct avl_node* root, void (*print)(void*))
