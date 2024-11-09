@@ -24,8 +24,6 @@ int splay_levels(struct splay_node* root);
 void* splay_min(struct splay_node* root); 
 void* splay_max(struct splay_node* root); 
 
-struct splay_node* splay_search_child_with_value(struct splay_node* root, void* value, bool (*check_equality)(void*, void*)); 
-struct splay_node* splay_search_parent(struct splay_node* root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
 struct splay_node* splay_search(struct splay_node** root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*)); 
 
 struct splay_node* splay_successor_parent(struct splay_node* root);

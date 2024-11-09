@@ -69,17 +69,30 @@ struct splay_node* splay_right_left_rotate(struct splay_node* root)
 
 }
 
+struct splay_node* splay_right_right_rotate(struct splay_node* root)
+{	
+	if(root==NULL) return NULL;
+
+	root->right=splay_right_rotate(root->right);
+	return splay_right_rotate(root);
+
+}
+
+struct splay_node* splay_left_left_rotate(struct splay_node* root)
+{	
+	if(root==NULL) return NULL;
+
+	root->left=splay_left_rotate(root->left);
+	return splay_left_rotate(root);
+
+}
+
 struct splay_node* splay_left_right_rotate(struct splay_node* root)
 {	
 	if(root==NULL) return NULL;
 
 	root->left=splay_left_rotate(root->left);
 	return splay_right_rotate(root);
-}
-
-struct splay_node* splay_splay(struct splay_node* root, void* value)
-{
-	return NULL;
 }
 
 void splay_inorder_print(struct splay_node* root, void (*print)(void*))
@@ -196,6 +209,42 @@ struct splay_node* splay_predecessor_parent(struct splay_node* root)
 	return root;
 }
 
+struct splay_node* splay_splay(struct splay_node* root,  void* value, bool (*check_equality)(void* a, void* b), void* (*compare)(void*, void*))
+{
+
+
+	if(compare(root->value, value)) return root;
+
+	struct splay_node* parent = splay_search_parent(root, value, check_equality, compare);
+
+ 	struct splay_node* target = splay_search_child_with_value(parent, value, check_equality);
+
+	struct splay_node* grand_parent = splay_search_parent(root, parent->value, check_equality, compare);
+
+	while(root!=target){
+
+		if(parent->left==target){
+			if(parent==root) return splay_right_rotate(root);
+			if(grand_parent->left==parent) target=splay_left_left_rotate(grand_parent);
+			else target=splay_right_left_rotate(grand_parent);
+			
+		}
+		else{
+			if(parent==root) return splay_left_rotate(root);
+			if(grand_parent->left==parent) target=splay_left_left_rotate(grand_parent);
+			else target=splay_right_left_rotate(grand_parent);
+		
+		}	
+		
+		parent=splay_search_parent(root, parent->value, check_equality, compare);
+		if(parent!=NULL)  grand_parent = splay_search_parent(root, parent->value, check_equality, compare);
+	}
+
+	return root;
+
+}
+
+
 struct splay_node* splay_search(struct splay_node** root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
 {
 	assert(value!=NULL);
@@ -203,7 +252,7 @@ struct splay_node* splay_search(struct splay_node** root, void* value, bool (*ch
 	if(check_equality(value, (*root)->value)) return *root;
 	struct splay_node* sp = splay_search_child_with_value(splay_search_parent(*root,value,check_equality,compare), value, check_equality);
 
-	if(sp!=NULL) *root=splay_splay(*root, sp->value);
+	if(sp!=NULL) *root=splay_splay(*root, sp->value, check_equality, compare);
 		
 	return sp;
 }
