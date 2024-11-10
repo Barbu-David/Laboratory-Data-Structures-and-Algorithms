@@ -44,6 +44,7 @@ int main(void)
 	printf("\n");
 	splay_inorder_print(sp, print_for_ints);	
 	
+	splay_free(&sp);
 
 	return 0;
 }
