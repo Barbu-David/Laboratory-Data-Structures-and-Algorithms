@@ -20,7 +20,7 @@ struct rb_node* rb_init(void* value, size_t size)
 	node->value=new_value;
 	node->left=NULL;
 	node->right=NULL;
-	node->color=RED;
+	node->color=BLACK;
 	return node;
 }
 
@@ -36,7 +36,7 @@ int rb_levels(struct rb_node* root)
 struct rb_node* rb_right_rotate(struct rb_node* root)
 {
 	if(root==NULL) return NULL;
-	
+
 	struct rb_node* new_root=root->left;
 
 	if(new_root==NULL) return root; 
@@ -61,6 +61,18 @@ struct rb_node* rb_left_rotate(struct rb_node* root)
 	return new_root;
 }
 
+
+struct rb_node* rb_right_left_rotate(struct rb_node* root)
+{	
+	if(root==NULL) return NULL;
+
+	root->right=rb_right_rotate(root->right);
+	return rb_left_rotate(root);
+}
+
+struct rb_node* rb_left_right_rotate(struct rb_node* root)
+{	
+	if(root==NULL) return NULL;
 
 	root->left=rb_left_rotate(root->left);
 	return rb_right_rotate(root);
@@ -141,6 +153,18 @@ struct rb_node* rb_search_parent(struct rb_node* root, void* value, bool (*check
 	return root;
 }
 
+struct rb_node* rb_search_grand_parent(struct rb_node* root, void* value, bool (*check_equality)(void* a, void* b), void* (*compare)(void*, void*))
+{
+	assert(value!=NULL);
+
+	void* parent_value=rb_search_parent(root, value, check_equality, compare)->value;
+	root=rb_search_parent(root, parent_value, check_equality, compare);
+
+
+	return root;
+}
+
+
 struct rb_node* rb_search_child_with_value(struct rb_node* root, void* value, bool (*check_equality)(void*, void*))
 {
 	assert(value!=NULL);
@@ -152,6 +176,7 @@ struct rb_node* rb_search_child_with_value(struct rb_node* root, void* value, bo
 
 	return root->left;
 }
+
 
 struct rb_node* rb_successor_parent(struct rb_node* root)
 {
@@ -190,7 +215,7 @@ struct rb_node* rb_search(struct rb_node* root, void* value, bool (*check_equali
 }
 
 
-void rb_push(struct rb_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
+void rb_push_no_fix(struct rb_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
 {	
 	if(*root==NULL) { 
 		fprintf(stderr,"Pushed to uninitialized tree\n");
@@ -200,13 +225,50 @@ void rb_push(struct rb_node** root, void* value, size_t size, bool (*check_equal
 	assert(value!=NULL);
 
 	if(compare(value,(*root)->value)==(*root)->value){
-		if((*root)->left!=NULL)
-			rb_push(&((*root)->left), value, size, check_equality, compare);
-		else (*root)->left=rb_init(value, size);	
+		if((*root)->left!=NULL) rb_push(&((*root)->left), value, size, check_equality, compare);
+		else {
+			(*root)->left=rb_init(value, size);	
+			(*root)->left->color=RED;
+		}
 	}
 	else if((*root)->right!=NULL) rb_push(&((*root)->right), value, size, check_equality, compare);
-	else (*root)->right=rb_init(value, size);
+	else {
+	(*root)->right=rb_init(value, size);
+	(*root)->right->color=RED;
+	}
 
+}
+
+void rb_fix(struct rb_node** root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
+{
+	struct rb_node* parent=rb_search_parent(*root, value, check_equality, compare);
+	if(parent->color==BLACK) return;
+
+	struct rb_node* grand=rb_search_grand_parent(*root, value, check_equality, compare);
+	struct rb_node* uncle;
+	if(rb_search_child_with_value(grand, parent->value, check_equality)==grand->left) uncle=grand->right;
+	else uncle=grand->left;
+
+	if(uncle==NULL) {
+		parent->color=BLACK;
+		grand->color=RED;
+		rb_fix(root, value, check_equality, compare);
+		return;
+	}
+	else if(uncle->color==BLACK) {	
+		parent->color=BLACK;
+		uncle->color=BLACK;
+		grand->color=RED;
+		rb_fix(root, value, check_equality, compare);
+		return;
+	}
+
+}
+
+void rb_push(struct rb_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
+{	
+	rb_push_no_fix(root, value, size, check_equality, compare);
+	rb_fix(root, value, check_equality, compare);
 }
 
 struct rb_node* rb_successor(struct rb_node* root)
@@ -239,7 +301,7 @@ void rb_pop(struct rb_node** root, void* value, bool (*check_equality)(void*, vo
 		if (parent != NULL) {
 			if (target == parent->left) parent->left = NULL;
 			else if (target == parent->right) parent->right = NULL;
-	} 
+		} 
 		else *root = NULL;
 
 		free(target->value);
