@@ -213,7 +213,7 @@ struct splay_node* splay_splay(struct splay_node* root,  void* value, bool (*che
 {
 
 
-	if(compare(root->value, value)) return root;
+	if(check_equality(root->value, value)) return root;
 
 	struct splay_node* parent = splay_search_parent(root, value, check_equality, compare);
 
@@ -253,8 +253,8 @@ struct splay_node* splay_search(struct splay_node** root, void* value, bool (*ch
 	struct splay_node* sp = splay_search_child_with_value(splay_search_parent(*root,value,check_equality,compare), value, check_equality);
 
 	if(sp!=NULL) *root=splay_splay(*root, sp->value, check_equality, compare);
-		
-	return sp;
+	
+	return *root;
 }
 
 
