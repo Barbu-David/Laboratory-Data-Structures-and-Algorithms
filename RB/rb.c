@@ -91,8 +91,11 @@ void rb_inorder_print(struct rb_node* root, void (*print)(void*))
 void rb_preorder_print(struct rb_node* root, void (*print)(void*))
 {
 	if(root==NULL)	return;
-
+	if(root->color==BLACK)
+	printf("BLACK");
+	else printf("RED");
 	print(root->value);
+
 	rb_preorder_print(root->left, print);
 	rb_preorder_print(root->right, print);
 
@@ -146,8 +149,8 @@ struct rb_node* rb_search_parent(struct rb_node* root, void* value, bool (*check
 		if(root->right!=NULL)
 			if(check_equality(value, root->right->value)) return root;
 
-		if(compare(value, root->value)==value) root=root->left;
-		else root=root->right;
+		if(compare(value, root->value)==value) root=root->right;
+		else root=root->left;
 	}
 
 	return root;
@@ -157,11 +160,12 @@ struct rb_node* rb_search_grand_parent(struct rb_node* root, void* value, bool (
 {
 	assert(value!=NULL);
 
-	void* parent_value=rb_search_parent(root, value, check_equality, compare)->value;
-	root=rb_search_parent(root, parent_value, check_equality, compare);
+	struct rb_node* parent=rb_search_parent(root, value, check_equality, compare);
+	if(parent==NULL) return root;
 
-
-	return root;
+	struct rb_node* grand=rb_search_parent(root, parent->value, check_equality, compare);
+	if(grand==NULL) return root;
+	return grand;
 }
 
 
@@ -223,7 +227,9 @@ void rb_push_no_fix(struct rb_node** root, void* value, size_t size, bool (*chec
 	}
 
 	assert(value!=NULL);
-
+	
+	if(check_equality((*root)->value, value)) return;
+	
 	if(compare(value,(*root)->value)==(*root)->value){
 		if((*root)->left!=NULL) rb_push(&((*root)->left), value, size, check_equality, compare);
 		else {
@@ -233,34 +239,8 @@ void rb_push_no_fix(struct rb_node** root, void* value, size_t size, bool (*chec
 	}
 	else if((*root)->right!=NULL) rb_push(&((*root)->right), value, size, check_equality, compare);
 	else {
-	(*root)->right=rb_init(value, size);
-	(*root)->right->color=RED;
-	}
-
-}
-
-void rb_fix(struct rb_node** root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
-{
-	struct rb_node* parent=rb_search_parent(*root, value, check_equality, compare);
-	if(parent->color==BLACK) return;
-
-	struct rb_node* grand=rb_search_grand_parent(*root, value, check_equality, compare);
-	struct rb_node* uncle;
-	if(rb_search_child_with_value(grand, parent->value, check_equality)==grand->left) uncle=grand->right;
-	else uncle=grand->left;
-
-	if(uncle==NULL) {
-		parent->color=BLACK;
-		grand->color=RED;
-		rb_fix(root, value, check_equality, compare);
-		return;
-	}
-	else if(uncle->color==BLACK) {	
-		parent->color=BLACK;
-		uncle->color=BLACK;
-		grand->color=RED;
-		rb_fix(root, value, check_equality, compare);
-		return;
+		(*root)->right=rb_init(value, size);
+		(*root)->right->color=RED;
 	}
 
 }
@@ -268,7 +248,64 @@ void rb_fix(struct rb_node** root, void* value, bool (*check_equality)(void*, vo
 void rb_push(struct rb_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
 {	
 	rb_push_no_fix(root, value, size, check_equality, compare);
-	rb_fix(root, value, check_equality, compare);
+
+	struct rb_node* parent = rb_search_parent(*root, value, check_equality, compare);
+
+	while(parent!=NULL)
+	{
+		if(parent->color==BLACK) break;
+
+		struct rb_node* grand = rb_search_grand_parent(*root, value, check_equality, compare);
+		struct rb_node* uncle=(rb_search_child_with_value(grand, parent->value, check_equality)==grand->left)? grand->right:grand->left;
+
+		struct rb_node* target = rb_search_child_with_value(parent, value, check_equality);
+
+
+		if(grand==parent) printf("wrong");
+
+		if(uncle!=NULL){
+			if(uncle->color==RED) {
+				parent->color=BLACK;
+				uncle->color=BLACK;
+				grand->color=RED;
+				value=grand->value;
+			} 
+		}
+		else {
+			if(grand->left==parent) {
+
+				if (parent->left == target) { 
+					grand->color = RED;
+					parent->color = BLACK;
+					grand = rb_right_rotate(grand);
+					value=grand->value;
+				} 
+				else {  
+					parent = rb_left_right_rotate(parent);
+					value=parent->value;
+				}
+			}	
+
+			else {
+				if (parent->right == target) {
+					grand->color = RED;
+					parent->color = BLACK;
+					grand = rb_left_rotate(grand);
+					value=grand->value;
+
+				}
+				else {
+					parent = rb_right_left_rotate(parent);
+					value=parent->value;
+				}
+			}
+		}
+
+		parent = rb_search_parent(*root, value, check_equality, compare);
+
+	}
+
+	(*root)->color=BLACK;
 }
 
 struct rb_node* rb_successor(struct rb_node* root)
