@@ -69,15 +69,42 @@ void print_for_pers(void* a)
 The binary tree is one of the most known tree data structures, where each node has at most two children.
 The binary search trees adds one more rule: all of the right subtree values must be higher than the root, and the left smaller.  This means that the tree can't store duplicate values.
 
+All of the binary search tree related functions start with bst_
 ### **Struct Definition**
 
+```c
+struct bst_node { 
+        struct  bst_node* right;
+        struct  bst_node* left;
+        void* value;
+};
+```
 
+The node stores pointers to its childrem and its generic value;
 
 ### **Initialization Function**
+
+`struct bst_node* bst_init(void* value, size_t size)`
+
+#### Usage
+When declaring a new binary tree, you should type something like `struct bst_node* my_bst=bst_init(&my_value, sizeof(my_data));`
+This variable will hold your root node. You must provide a non NULL value, and the size of that value. Then the bst will be initialized with that value as the root. The function tries to make its copy of the data. If there isn't enough memory avalible, it will fail.
+
+#### Implementation
+
+The function asserts that it hasn't recieved an empty value, then tries to allocate memory for the node and its copy of the data. It then initializes the roots values and returns the root.
 ...
 
 ### **Pushing Function**
-...
+
+`void bst_push(struct bst_node* root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))`
+
+#### Usage
+This function is for pushing values to the bst. You must provide the root, the value you want to push along with its size, and functions for comparing and checking equality (0.3) . You cannot push to an uninitialized tree or try to push an empty value.
+
+#### Implementation
+
+After validating the input, the function searches for the place to insert the new node. If it finds an identical node, it returns, oherwise it creates a new node in the correct location. It uses the `pushed` flag to break out of the loop. 
 
 ### **Popping Function**
 ...

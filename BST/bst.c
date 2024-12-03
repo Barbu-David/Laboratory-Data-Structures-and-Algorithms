@@ -27,14 +27,12 @@ struct bst_node* bst_init(void* value, size_t size)
 
 void bst_push(struct bst_node* root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
 {	
-	if(root==NULL) { 
-		fprintf(stderr,"Pushed to uninitialized tree\n");
-		return;	
-	}
-
+	assert(root!=NULL);
 	assert(value!=NULL);
 
 	bool pushed=false;
+
+	//Non recursive implementation
 	while(!pushed)
 	{
 		if(check_equality(value, root->value)) return;
