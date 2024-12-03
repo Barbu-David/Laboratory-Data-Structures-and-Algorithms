@@ -138,22 +138,29 @@ struct avl_node* avl_balance(struct avl_node* root)
 	return root;	
 }
 
-void avl_push(struct avl_node** root, void* value, size_t size, void* (*compare)(void*, void*))
-{	
-	if(*root==NULL) { 
-		fprintf(stderr,"Pushed to uninitialized tree\n");
-		return;	
-	}
-
+void avl_push(struct avl_node** root, void* value, size_t size, bool (*check_equality) (void*, void*) ,void* (*compare)(void*, void*))
+{
+	assert(root!=NULL);	
 	assert(value!=NULL);
 
-	if(compare(value,(*root)->value)==(*root)->value){
-		if((*root)->left!=NULL)
-			avl_push(&((*root)->left), value, size, compare);
-		else (*root)->left=avl_init(value, size);	
-	}
-	else if((*root)->right!=NULL) avl_push(&((*root)->right), value, size, compare);
-	else (*root)->right=avl_init(value, size);
+        bool pushed=false;
+        while(!pushed)
+        {
+                if(check_equality(value, (*root)->value)) return;
+                if(compare(value,(*root)->value)==(*root)->value){
+                        if((*root)->left!=NULL) *root=(*root)->left;
+                        else {
+                                (*root)->left=avl_init(value, size);    
+                                pushed=true;
+                        }
+                }
+                else if((*root)->right!=NULL) *root=(*root)->right;
+                else {
+                        (*root)->right=avl_init(value, size);
+                        pushed=true;
+                }
+
+        }
 
 	avl_node_balance_factor(*root);
 	*root=avl_balance(*root);
@@ -331,7 +338,7 @@ void avl_pop(struct avl_node** root, void* value, bool (*check_equality)(void*, 
 			avl_node_balance_factor(parent);
 			parent=avl_balance(parent);
 		} 
-		else *root = NULL;
+		else *root = target->left;
 
 		free(target->value);
 		free(target);
@@ -345,7 +352,7 @@ void avl_pop(struct avl_node** root, void* value, bool (*check_equality)(void*, 
 			avl_node_balance_factor(parent);
 			parent=avl_balance(parent);
 		} 	
-		else *root = NULL;
+		else *root = target->right;
 
 		free(target->value);
 		free(target);

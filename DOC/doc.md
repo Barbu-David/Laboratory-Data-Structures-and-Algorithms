@@ -4,7 +4,6 @@ This library was made for UCV's Data Structures and Algorithms course. It aims t
 
 ## **Contents**
 
-
 ### **Part 0**
 - 0.1 The void* data type
 - 0.2 Memory management
@@ -63,11 +62,11 @@ void print_for_pers(void* a)
 
 
 ```
-## **1.1 Binary Search Trees**
+## **1.1 Binary Search Tree**
 
 ### **Introduction**
 The binary tree is one of the most known tree data structures, where each node has at most two children.
-The binary search trees adds one more rule: all of the right subtree values must be higher than the root, and the left smaller.  This means that the tree can't store duplicate values.
+The binary search tree adds one more rule: all of the right subtree values must be higher than the root, and the left smaller.  This means that the tree can't store duplicate values.
 
 All of the binary search tree related functions start with bst_
 ### **Struct Definition**
@@ -104,7 +103,7 @@ This function is for pushing values to the bst. You must provide the root, the v
 
 #### Implementation
 
-After validating the input, the function searches for the place to insert the new node. If it finds an identical node, it returns, oherwise it creates a new node in the correct location. It uses the `pushed` flag to break out of the loop. 
+After validating the input, the function searches for the place to insert the new node. If it finds an identical node, it returns, otherwise it creates a new node in the correct location. It uses the `pushed` flag to break out of the loop. 
 
 ### **Popping Function**
 
@@ -165,10 +164,20 @@ struct bst_node* bst_successor(struct bst_node* root);
 struct bst_node* bst_predecessor(struct bst_node* root);
 ```
 
-Finds the successor or predecessor of a node. There are also functions for finding its parents.
+Finds the successor or predecessor of a node. There are also functions for finding their parents.
 
 ### **Free Function**
 
 `void bst_free(struct bst_node** root)`
 
 Since the root will be freed as well, the function needs a pointer to it. After that the function recursevily frees all of the tree.
+
+## **1.3.1 AVL Tree **
+
+### Introduction
+
+### Balance factor
+
+### Rotations
+
+### Balancing

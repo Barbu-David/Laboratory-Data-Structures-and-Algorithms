@@ -38,8 +38,8 @@ void bst_push(struct bst_node* root, void* value, size_t size, bool (*check_equa
 		if(check_equality(value, root->value)) return;
 		if(compare(value,root->value)==root->value){
 			if(root->left!=NULL) root=root->left;
-			else {
-				root->left=bst_init(value, size);	
+				else {
+					root->left=bst_init(value, size);	
 				pushed=true;
 			}
 		}
