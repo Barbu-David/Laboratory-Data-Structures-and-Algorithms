@@ -96,7 +96,7 @@ struct avl_node* avl_balance(struct avl_node* root)
 {
 	if(root==NULL) return NULL;
 
-	if(root->balance_factor>1) {
+	if(root->balance_factor>1) { //Left cases
 
 		int left_right_factor, left_left_factor;
 		if(root->left==NULL) {	
@@ -108,14 +108,14 @@ struct avl_node* avl_balance(struct avl_node* root)
 			else left_left_factor=0;
 			if(root->left->right!=NULL) left_right_factor=root->left->right->balance_factor;
 			else left_right_factor=0;
-		}
+		}T
 
 		if(left_left_factor>=left_right_factor) 
 			return avl_right_rotate(root);
 		else return avl_left_right_rotate(root);
 
 	}
-	else if(root->balance_factor<-1){
+	else if(root->balance_factor<-1){ //Right cases
 
 		int right_right_factor, right_left_factor;
 		if(root->right==NULL) {	

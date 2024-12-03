@@ -172,12 +172,46 @@ Finds the successor or predecessor of a node. There are also functions for findi
 
 Since the root will be freed as well, the function needs a pointer to it. After that the function recursevily frees all of the tree.
 
-## **1.3.1 AVL Tree **
+## **1.3.1 AVL Tree**
 
 ### Introduction
+From the outside, the avl tree functions like a normal tree. However, the AVL structure ensures that the tree is balanced, making insertion/deletion/traversal faster. The way it achieves this is trough the use of a balance factor.
+
+The avl related functions start with avl_ .
+
+Most of the functions are similar to the bst ones, with the searching and utilities functions remaining unchanged. The major difference is in in the push/pop functions. The functions rebalance the tree after each change. Also, since the root may change due to a rotation, the push function also requires a pointer to root.
+
+### Struct definition
+```c
+struct avl_node { 
+        struct  avl_node *right;
+        struct  avl_node *left;
+        int balance_factor;
+        void* value;
+};
+```
+
+The node differs from bst by including the balance factor.
 
 ### Balance factor
+`int avl_node_balance_factor(struct avl_node* root)`
+This function is used for calculating the balance factor of a node. It is equal to the difference between the levels of the right and the left subtree.
 
 ### Rotations
 
+```c
+struct avl_node* avl_left_rotate(struct avl_node* root)
+struct avl_node* avl_right_rotate(struct avl_node* root)
+struct avl_node* avl_right_left_rotate(struct avl_node* root)
+struct avl_node* avl_left_right_rotate(struct avl_node* root)
+```
+
+The rotations are used to rebalance the tree. The "rotation" is in reality just a swap. In the left rotation the right child is swaped with the root. After this the balance factor is updated. The left rotation is symetric.
+
+Combined rotations are just a series of base rotations.
+
 ### Balancing
+
+`struct avl_node* avl_balance(struct avl_node* root)`
+ 
+The balance function work by treating all 4 rotation cases. The sign of the balance factor chooses between two groups of two cases. After that using some varibles we compare the factors of the grandchildren. Based on that one case is chosen from the remaining two.
