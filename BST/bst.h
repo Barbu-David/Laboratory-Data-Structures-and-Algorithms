@@ -7,8 +7,8 @@
 
 //Struct declaration
 struct bst_node { 
-        struct  bst_node *right;
-        struct  bst_node *left;
+        struct  bst_node* right;
+        struct  bst_node* left;
         void* value;
 };
 

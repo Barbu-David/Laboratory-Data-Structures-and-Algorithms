@@ -15,6 +15,7 @@ struct bst_node* bst_init(void* value, size_t size)
 	void* new_value=malloc(size);
 	assert(new_value!=NULL);
 
+	//Creating a local copy of the value
 	memcpy(new_value, value, size);
 
 	node->value=new_value;
