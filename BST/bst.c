@@ -204,20 +204,24 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 
 	assert(value!=NULL);
 
+	//finding the target and its parent
+	//if the target is the root the parent will be NULL
 	struct bst_node* target = *root;
 
 	struct bst_node* parent = bst_search_parent(target, value, check_equality, compare);
 
 	if(parent!=NULL) target = bst_search_child_with_value(target, value, check_equality);	
 
+	//Coud not find target
 	if (target == NULL) return; 
 
+	//No children 
 	if (target->left == NULL && target->right == NULL) {
 		if (parent != NULL) {
 			if (target == parent->left) parent->left = NULL;
-			else if (target == parent->right) parent->right = NULL;
+			else parent->right = NULL;
 		} 
-		else *root = NULL;
+		else *root = NULL; //this path deletes the tree
 
 		free(target->value);
 		free(target);
@@ -225,12 +229,13 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 		return;
 	}
 
+	//One child
 	if (target->right == NULL) {
 		if (parent != NULL) {
 			if (parent->right == target) parent->right = target->left;
 			else parent->left = target->left;
 		} 
-		else *root = NULL;
+		else *root = target->left; //set the new root to its child
 
 		free(target->value);
 		free(target);
@@ -242,12 +247,15 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 			if (parent->right == target) parent->right = target->right;
 			else parent->left = target->right;
 		} 	
-		else *root = NULL;
+		else *root = target->right;
 
 		free(target->value);
 		free(target);
 		return;
 	}
+
+
+	//Two children 
 
 	struct bst_node* successor_parent = bst_successor_parent(target);
 	struct bst_node* successor = (successor_parent->left==NULL)? successor_parent:successor_parent->left;
