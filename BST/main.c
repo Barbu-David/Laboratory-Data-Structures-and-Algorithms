@@ -46,13 +46,13 @@ int main(void)
 	printf("\n");	
 
 	a=23;
-	bst_push(bst, &a, sizeof(int), compare_for_ints);
+	bst_push(bst, &a, sizeof(int), check_equality_for_ints, compare_for_ints);
 
 	a=25;
-	bst_push(bst, &a, sizeof(int), compare_for_ints);
+	bst_push(bst, &a, sizeof(int), check_equality_for_ints, compare_for_ints);
 
 	a=27;
-	bst_push(bst, &a, sizeof(int), compare_for_ints);
+	bst_push(bst, &a, sizeof(int), check_equality_for_ints, compare_for_ints);
 
 	bst_inorder_print(bst, print_for_ints);
 	printf("\n");
@@ -80,15 +80,15 @@ int main(void)
 
 	pers.age=23;
 	pers.initial='B';
-	bst_push(bst2, &pers, sizeof(struct person), compare_for_pers);
+	bst_push(bst2, &pers, sizeof(struct person), check_equality_for_pers, compare_for_pers);
 
 	pers.age=25;
 	pers.initial='C';
-	bst_push(bst2, &pers, sizeof(struct person), compare_for_pers);
+	bst_push(bst2, &pers, sizeof(struct person), check_equality_for_pers, compare_for_pers);
 
 	pers.age=27;
 	pers.initial='D';
-	bst_push(bst2, &pers, sizeof(struct person), compare_for_pers);
+	bst_push(bst2, &pers, sizeof(struct person), check_equality_for_pers, compare_for_pers);
 
 	bst_inorder_print(bst2, print_for_pers);	
 	bst_pop(&bst2, &persA, check_equality_for_pers, compare_for_pers);

@@ -24,7 +24,7 @@ struct bst_node* bst_init(void* value, size_t size)
 	return node;
 }
 
-void bst_push(struct bst_node* root, void* value, size_t size, void* (*compare)(void*, void*))
+void bst_push(struct bst_node* root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
 {	
 	if(root==NULL) { 
 		fprintf(stderr,"Pushed to uninitialized tree\n");
@@ -36,6 +36,7 @@ void bst_push(struct bst_node* root, void* value, size_t size, void* (*compare)(
 	bool pushed=false;
 	while(!pushed)
 	{
+		if(check_equality(value, root->value)) return;
 		if(compare(value,root->value)==root->value){
 			if(root->left!=NULL) root=root->left;
 			else {

@@ -16,7 +16,7 @@ struct bst_node {
 struct bst_node* bst_init(void* value, size_t size); 
 
 //Pushing and popping
-void bst_push(struct bst_node* root, void* value, size_t size, void* (*compare)(void*, void*));
+void bst_push(struct bst_node* root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
 void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
 
 //Printing
