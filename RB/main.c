@@ -1,6 +1,9 @@
 #include<stdio.h>
 #include"rb.h"
 
+////broken, work in progress
+
+
 void* compare_for_ints(void* a, void* b)
 {
 	return *(int*)a >= *(int*)b? a:b;

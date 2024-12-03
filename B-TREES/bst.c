@@ -33,23 +33,13 @@ void bst_push(struct bst_node* root, void* value, size_t size, void* (*compare)(
 
 	assert(value!=NULL);
 
-	bool pushed=false;
-	while(!pushed)
-	{
-		if(compare(value,root->value)==root->value){
-			if(root->left!=NULL) root=root->left;
-			else {
-				root->left=bst_init(value, size);	
-				pushed=true;
-			}
-		}
-		else if(root->right!=NULL) root=root->right;
-		else {
-			root->right=bst_init(value, size);
-			pushed=true;
-		}
-
+	if(compare(value,root->value)==root->value){
+		if(root->left!=NULL)
+			bst_push(root->left, value, size, compare);
+		else root->left=bst_init(value, size);	
 	}
+	else if(root->right!=NULL) bst_push(root->right, value, size, compare);
+	else root->right=bst_init(value, size);
 }
 
 void bst_inorder_print(struct bst_node* root, void (*print)(void*))
@@ -202,12 +192,12 @@ struct bst_node* bst_predecessor(struct bst_node* root)
 
 void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))  {
 
-	assert(value!=NULL);
+        assert(value!=NULL);
 
 	struct bst_node* target = *root;
 
 	struct bst_node* parent = bst_search_parent(target, value, check_equality, compare);
-
+		
 	if(parent!=NULL) target = bst_search_child_with_value(target, value, check_equality);	
 
 	if (target == NULL) return; 
@@ -218,7 +208,7 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 			else if (target == parent->right) parent->right = NULL;
 		} 
 		else *root = NULL;
-
+		
 		free(target->value);
 		free(target);
 
@@ -231,7 +221,7 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 			else parent->left = target->left;
 		} 
 		else *root = NULL;
-
+		
 		free(target->value);
 		free(target);
 		return;
@@ -251,14 +241,14 @@ void bst_pop(struct bst_node** root, void* value, bool (*check_equality)(void*, 
 
 	struct bst_node* successor_parent = bst_successor_parent(target);
 	struct bst_node* successor = (successor_parent->left==NULL)? successor_parent:successor_parent->left;
-
+	
 	void* stored_target_value=target->value;
 
 	target->value = successor->value;
 
 	if (successor_parent->left == successor) successor_parent->left = successor->right;
 	else successor_parent->right = successor->right;
-
+	
 	free(stored_target_value);
 	free(successor);
 }

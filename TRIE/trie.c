@@ -14,7 +14,8 @@ struct trie_node* trie_init(void)
 bool trie_empty(struct trie_node* root)
 {
 	for(int i=0;i<ALPHABET_SIZE;i++)
-		if(root->children[i]!=NULL) return false;
+		if(root->children[i]!=NULL) 
+			return false;
 
 	return true;
 }
@@ -90,7 +91,6 @@ void trie_delete(struct trie_node* root, char* word, int word_size, int depth)
 	
 	if(depth==word_size) {
 		if(root->end_flag) root->end_flag=false;
-
 		return;
 	}
 
@@ -100,10 +100,6 @@ void trie_delete(struct trie_node* root, char* word, int word_size, int depth)
 
 	trie_delete(root->children[index], word, word_size, depth+1);
 	
-	if(trie_empty(root) && !root->end_flag) {
-		free(root);
-		root=NULL;
-	}
 }
 
 void trie_free(struct trie_node* root)
