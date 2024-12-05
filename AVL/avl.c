@@ -36,7 +36,7 @@ int avl_levels(struct avl_node* root)
 int avl_node_balance_factor(struct avl_node* root)
 {
 	if(root==NULL) 	return 0;	
-
+	//The balance factor is just the difference of the depth of the left subtree compared to the right
 	root->balance_factor=avl_levels(root->left)-avl_levels(root->right);
 	return root->balance_factor;
 
@@ -46,6 +46,7 @@ struct avl_node* avl_right_rotate(struct avl_node* root)
 {
 	if(root==NULL) return NULL;
 	
+	//the left child of the tree gets rotated to the right
 	struct avl_node* new_root=root->left;
 
 	if(new_root==NULL) return root; 
@@ -78,7 +79,8 @@ struct avl_node* avl_left_rotate(struct avl_node* root)
 struct avl_node* avl_right_left_rotate(struct avl_node* root)
 {	
 	if(root==NULL) return NULL;
-
+	
+	//composed rotation obtained by doing two regular rotations
 	root->right=avl_right_rotate(root->right);
 	return avl_left_rotate(root);
 
@@ -161,7 +163,7 @@ void avl_push(struct avl_node** root, void* value, size_t size, bool (*check_equ
                 }
 
         }
-
+	//rebalancing the tree after insertion
 	avl_node_balance_factor(*root);
 	*root=avl_balance(*root);
 }

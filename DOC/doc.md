@@ -10,7 +10,7 @@ This library was made for UCV's Data Structures and Algorithms course. It aims t
 - 0.3 Generic functions
 
 ### **Part 1: Trees**
-- 1.1 Binary Search Trees
+- 1.1 Binary Search Tree
 - 1.2 Binary Heap
 - 1.3 Height Balanced Trees
   - 1.3.1 AVL Trees
@@ -171,6 +171,50 @@ Finds the successor or predecessor of a node. There are also functions for findi
 `void bst_free(struct bst_node** root)`
 
 Since the root will be freed as well, the function needs a pointer to it. After that the function recursevily frees all of the tree.
+
+
+## **1.2 Binary Heap**
+
+### **Introduction**
+
+A binary heap is an array with a few specific proprieties. The values are arranged in such a way that they represent a full binary tree, and the root is the value with the highest priority. If lower values have a higher priority, it is called a minheap, otherwise a maxheap.
+
+All binary heap related functions start with binaryheap_ .
+### **Struct definition**
+
+```c
+struct binaryheap {
+                void** values;
+                long unsigned occupied_capacity, capacity;
+};    
+```
+The data is organized in a struct instead of an array for easier memory management. By storing the occupied and maximum capacity, pushing/extracting become much easier.
+
+`void**` represent an **array** of generic values.
+
+### **Initialization**
+
+```c
+struct binaryheap* binaryheap_init();
+struct binaryheap* binaryheap_init_from_array(void** values, long unsigned number_of_elements, size_t size);
+```
+Before using the heap itself, it must be initialized. You can either start from scratch, or use a preexisting array. If you want to just have the array heapified, without creating the struct data structure, use `void binaryheap_heapify_array(void** future_heap, unsigned long number_of_elements, void* (*compare)(void*, void*));`
+
+### **Insertion**
+
+`void binaryheap_insert(struct binaryheap* heap, void* value, size_t size, void* (*compare)(void*, void*));`
+
+When the element is inserted, it creates capacity, if needed, and then gets inserted as the last element. It then gets compared with its parent until it is in the right position.
+
+### **Extraction**
+`void* binaryheap_extract(struct binaryheap* heap, void* (*compare)(void*, void*));
+void binaryheap_delete(struct binaryheap* heap, void* value, size_t size, void* (*compare)(void*, void*), bool (*check_equality)(void*, void*));`
+
+The extract function removes and returns the first element in the heap. **Since the element was removed from the heap, you are responsible for freeing its memory**. 
+The delete function deletes a specific value, is slower, and frees the value for you.
+
+`void* binaryheap_findmin(struct binaryheap* heap);`
+This function just returns the first element of the heap, without removing it.
 
 ## **1.3.1 AVL Tree**
 
