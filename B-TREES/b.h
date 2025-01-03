@@ -19,7 +19,7 @@ struct b_node {
 struct b_node_value {
 	int index;
 	struct b_node* node;
-}
+};
 
 //Intialization
 
@@ -30,7 +30,7 @@ void b_push(struct b_node** root, void* value, size_t size, bool (*check_equalit
 void b_pop(struct b_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
 
 //Searching
-b_node_value b_search(struct b_node* root, void* value);
+struct b_node_value b_search(struct b_node* root, void* value);
 
 //Freeing
 void b_free(struct b_node* root);
