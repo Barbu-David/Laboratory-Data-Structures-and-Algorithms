@@ -1,5 +1,5 @@
 build:
-	gcc -o main *.c *.h -std=c99 -Wall -Wextra -Wunused
+	gcc -o main *.c *.h -std=c99 -Wall -Wextra -Wunused -g
 run:
 	./main
 debug:
