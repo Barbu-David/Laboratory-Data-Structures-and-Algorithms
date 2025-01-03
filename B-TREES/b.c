@@ -41,12 +41,12 @@ void b_split_child(struct b_node* root, int full_child_index)
 	
 	int index;
 	//the sibling gets the large values
-	for(index=0; index<=T-1; index++) 
+	for(index=0; index<T-1; index++) 
 		sibling->values[index]=child->values[index+T];
 	
 	//and the children, if they exist
 	if(!child->leaf) 
-		for(index=0; index<=T; index++) 
+		for(index=0; index<T; index++) 
 			sibling->children[index]=child->children[index+T];
 
 	child->numb_v=T-1; //the child keeps T-1 values. 
@@ -89,7 +89,7 @@ void b_split_root(struct b_node** root)
 }
 
 
-void b_push_not_full(struct b_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
+void b_push_not_full(struct b_node** root, void* value, size_t size, void* (*compare)(void*, void*))
 {
 	assert(value!=NULL);
 	int index=(*root)->numb_v-1;
@@ -115,15 +115,42 @@ void b_push_not_full(struct b_node** root, void* value, size_t size, bool (*chec
 			b_split_child(*root, index);
 			if(compare(value, (*root)->values[index])==value) index++;
 		}
-		b_push_not_full(&((*root)->children[index]), value, size, check_equality, compare);
+		b_push_not_full(&((*root)->children[index]), value, size, compare);
 	}
 }
 
-void b_push(struct b_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
+void b_push(struct b_node** root, void* value, size_t size, void* (*compare)(void*, void*))
 {
 	if((*root)->numb_v==2*T-1) b_split_root(root);
 
-	b_push_not_full(root, value, size, check_equality, compare);
+	b_push_not_full(root, value, size, compare);
+}
+
+struct b_node_value b_search(struct b_node* root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*))
+{
+	struct b_node_value return_value;
+	int index=0;
+	while(index<root->numb_v-1 && compare(value, root->values[index])== value) index++;
+	
+	printf("%d ", *(int*)root->values[index]);	
+	if(check_equality(value, root->values[index])) {
+		return_value.index=index;
+		return_value.node=root;
+		return return_value; 
+	}
+
+	if(index>0)	
+		if(check_equality(value, root->values[index-1])) {
+			return_value.index=index-1;
+			return_value.node=root;
+			return return_value; 
+		}	
+	if(compare(value, root->values[index])!=value) index--;
+	if(!root->leaf) return b_search(root->children[index+1], value, check_equality, compare);
+	
+	return_value.index=0;
+	return_value.node=NULL;
+	return return_value;
 }
 
 /*
@@ -138,12 +165,8 @@ void b_pop(struct b_node** root, void* value, size_t size, bool (*check_equaliy)
 
 }
 
-struct b_node_value b_search(struct b_node* root, void* value) 
-{
-
-}
-
 void b_free(struct b_node* root)
 {
 
-}*/
+}
+*/

@@ -26,11 +26,11 @@ struct b_node_value {
 struct b_node* b_init(void* value, size_t size);
 
 //Pushing and popping
-void b_push(struct b_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
+void b_push(struct b_node** root, void* value, size_t size, void* (*compare)(void*, void*));
 void b_pop(struct b_node** root, void* value, size_t size, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
 
 //Searching
-struct b_node_value b_search(struct b_node* root, void* value);
+struct b_node_value b_search(struct b_node* root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
 
 //Freeing
 void b_free(struct b_node* root);
