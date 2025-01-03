@@ -20,7 +20,8 @@ void b_print(struct b_node* root)
 		for(index=0; index<=(root->numb_v); index++) {
 			printf(" | ");
 			b_print(root->children[index]);
-	}
+	} 
+	else printf("leaf");
 }
 
 
@@ -77,7 +78,7 @@ int main(void)
 	printf("\n");
 
 
-	a=20;
+	a=11;
 	b_push(&root, &a, sizeof(int), check_equality_for_ints, compare_for_ints);
 	b_print(root);
 	printf("\n");
@@ -87,6 +88,25 @@ int main(void)
 	b_print(root);
 	printf("\n");
 
+	a=1;
+	b_push(&root, &a, sizeof(int), check_equality_for_ints, compare_for_ints);
+	b_print(root);
+	printf("\n");
 
+	a=2;
+	b_push(&root, &a, sizeof(int), check_equality_for_ints, compare_for_ints);
+	b_print(root);
+	printf("\n");
+
+	a=33;
+	b_push(&root, &a, sizeof(int), check_equality_for_ints, compare_for_ints);
+	b_print(root);
+	printf("\n");
+
+	a=34;
+	b_push(&root, &a, sizeof(int), check_equality_for_ints, compare_for_ints);
+	b_print(root);
+	printf("\n");
+	
 	return 0;
 }
