@@ -153,6 +153,47 @@ struct b_node_value b_search(struct b_node* root, void* value, bool (*check_equa
 	return return_value;
 }
 
+struct b_node_value b_max(struct b_node* root)
+{
+	if(root->leaf) {
+		struct b_node_value value;
+		value.index=root->numb_v-1;
+		value.node=root->children[value.index];
+		return value;
+	}
+	return b_max(root->children[root->numb_v]);
+	
+}
+
+struct b_node_value b_min(struct b_node* root)
+{
+	if(root->leaf) {
+		struct b_node_value value;
+		value.index=0;
+		value.node=root->children[0];
+		return value;
+	}
+	return b_min(root->children[0]);
+}
+
+int b_height(struct b_node* root)
+{
+	if(root->leaf)
+		return 1;
+	return 1 + b_height(root->children[0]);
+}
+
+int b_size(struct b_node* root)
+{
+	if(root->leaf)
+		return root->numb_v;
+	int s=0;
+	for(int index=0; index<=root->numb_v; index++)
+		s+=b_size(root->children[index]);
+	return root->numb_v+s;
+}
+
+
 /*
 void b_merge_siblings(struct b_node** root, void* value, size_t size, bool (*check_equalty)(void*, void*), void* (*compare)(void*, void*))
 {

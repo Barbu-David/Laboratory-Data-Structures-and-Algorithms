@@ -32,6 +32,12 @@ void b_pop(struct b_node** root, void* value, size_t size, bool (*check_equality
 //Searching
 struct b_node_value b_search(struct b_node* root, void* value, bool (*check_equality)(void*, void*), void* (*compare)(void*, void*));
 
+//Utility 
+struct b_node_value b_max(struct b_node* root);
+struct b_node_value b_min(struct b_node* root);
+int b_height(struct b_node* root);
+int b_size(struct b_node* root);
+
 //Freeing
 void b_free(struct b_node* root);
 
